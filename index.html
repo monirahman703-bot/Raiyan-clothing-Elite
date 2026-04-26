@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAIYAN CLOTHING ÉLITE</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=JetBrains+Mono:wght@100;300&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'elite-green': '#011609', 'elite-gold': '#D4AF37' },
+                    fontFamily: { 'luxury': ['Cinzel', 'serif'], 'tech': ['JetBrains Mono', 'monospace'], 'sans': ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #011609; color: white; margin: 0; overflow-x: hidden; }
+        body::-webkit-scrollbar { width: 3px; }
+        body::-webkit-scrollbar-thumb { background: #D4AF37; }
+        
+        .grain-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.04; pointer-events: none; z-index: 100; }
+        .text-gold-gradient { background: linear-gradient(to right, #D4AF37, #FFF, #D4AF37); -webkit-background-clip: text; color: transparent; }
+        
+        /* Hero Layering */
+        #hero-section { position: fixed; top: 0; left: 0; z-index: 10; width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; }
+        #main-content { position: relative; z-index: 20; margin-top: 100vh; background: #011609; box-shadow: 0 -50px 100px rgba(0,0,0,0.9); }
+
+        .image-container { aspect-ratio: 3/4; background: #0a0a0a; border: 1px solid rgba(212, 175, 55, 0.1); overflow: hidden; position: relative; }
+        .product-card:hover .image-container { border-color: #D4AF37; }
+        
+        .reveal-text { overflow: hidden; display: block; }
+
+        /* Maintenance Screen */
+        .maint-screen { height: 100vh; width: 100vw; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: fixed; inset: 0; z-index: 9999; }
+        
+        /* Interactive Elements */
+        .btn-elite { border: 1px solid rgba(212, 175, 55, 0.3); padding: 12px 24px; font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.3em; transition: all 0.5s ease; position: relative; overflow: hidden; }
+        .btn-elite:hover { border-color: #D4AF37; background: #D4AF37; color: black; }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="grain-overlay"></div>
+
+    <nav class="fixed top-0 w-full z-[100] px-6 py-8 flex justify-between items-center mix-blend-difference">
+        <div class="font-luxury text-sm tracking-[0.5em]">Èlite</div>
+        <div class="flex gap-8 font-tech text-[9px] uppercase tracking-widest text-gray-400">
+            <a href="#" class="hover:text-white transition-colors">Archive</a>
+            <a href="#" class="hover:text-white transition-colors">Contact</a>
+        </div>
+    </nav>
+
+  <section id="hero-section" class="pointer-events-none">
+    <div id="hero-wrap" class="text-center px-4 w-full max-w-7xl mx-auto">
+        <h1 class="font-luxury text-4xl md:text-7xl tracking-[0.3em] md:tracking-[0.6em] leading-tight uppercase opacity-0" id="hero-title">
+            <span class="block">RAIYAN</span>
+            <span class="text-gold-gradient block mt-2">CLOTHING ÉLITE</span>
+        </h1>
+        
+        <div class="mt-24 opacity-0" id="scroll-indicator">
+            <div class="w-[1px] h-20 bg-gradient-to-b from-elite-gold/60 to-transparent mx-auto relative">
+                 <p class="absolute -top-12 left-1/2 -translate-x-1/2 font-tech text-[8px] text-elite-gold/60 tracking-[0.6em] whitespace-nowrap uppercase animate-pulse">
+                    Scroll to Explore
+                 </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <div id="main-content">
+        <section class="min-h-screen w-full py-24 md:py-48 px-6 lg:px-24">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 md:mb-40 gap-10">
+                <div class="max-w-2xl">
+                    <span class="font-tech text-[10px] text-elite-gold tracking-[0.5em] uppercase block mb-4">Established 2026</span>
+                    <h2 class="font-luxury text-3xl md:text-5xl text-gold-gradient tracking-widest uppercase leading-tight">Handcrafted <br>Technical Garments</h2>
+                </div>
+                <p class="font-tech text-[10px] text-gray-500 uppercase tracking-[0.3em] max-w-xs text-right hidden md:block">
+                    Every piece is engineered for longevity and aesthetic dominance.
+                </p>
+            </div>
+
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24">
+                </div>
+        </section>
+
+        <footer class="bg-black pt-32 pb-12 px-6 lg:px-24 border-t border-white/5">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-16 mb-32">
+                <div class="md:col-span-6">
+                    <h3 class="font-luxury text-3xl text-gold-gradient mb-8 tracking-[0.4em]">RAIYAN ÉLITE</h3>
+                    <div class="w-20 h-[1px] bg-elite-gold/30 mb-8"></div>
+                    <p class="font-tech text-[11px] text-gray-500 leading-relaxed max-w-sm uppercase tracking-widest">
+                        Dhaka, Bangladesh — Specialized in structural tailoring and technical luxury wear. 
+                    </p>
+                </div>
+                <div class="md:col-span-3 text-[10px] font-tech space-y-6">
+                    <h4 class="text-elite-gold tracking-widest uppercase opacity-40">The Studio</h4>
+                    <a href="#" class="block text-gray-500 hover:text-white transition-all uppercase tracking-widest">New Arrivals</a>
+                    <a href="#" class="block text-gray-500 hover:text-white transition-all uppercase tracking-widest">The Archive</a>
+                    <a href="#" class="block text-gray-500 hover:text-white transition-all uppercase tracking-widest">Custom Orders</a>
+                </div>
+                <div class="md:col-span-3 text-[10px] font-tech space-y-6">
+                    <h4 class="text-elite-gold tracking-widest uppercase opacity-40">Client Care</h4>
+                    <a href="#" class="block text-gray-500 hover:text-white transition-all uppercase tracking-widest">Shipping Policy</a>
+                    <a href="#" class="block text-gray-500 hover:text-white transition-all uppercase tracking-widest">Terms of Service</a>
+                    <a href="#" class="block text-gray-500 hover:text-white transition-all uppercase tracking-widest">Instagram</a>
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-white/10 gap-6">
+                <p class="text-[8px] text-gray-600 tracking-[0.5em] uppercase">© 2026 RAIYAN CLOTHING ÉLITE. ALL RIGHTS RESERVED.</p>
+                <div class="flex gap-4">
+                    <div class="h-8 w-px bg-white/10"></div>
+                    <p class="text-[8px] text-gray-600 tracking-[0.5em] uppercase self-center">Privacy Over Ownership</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="quick-view" class="fixed inset-0 z-[200] flex items-center justify-center p-6 opacity-0 pointer-events-none transition-all duration-500">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="closeQuickView()"></div>
+        <div class="relative w-full max-w-4xl bg-[#0a0a0a] border border-white/10 flex flex-col md:flex-row overflow-hidden max-h-[90vh]">
+            <button onclick="closeQuickView()" class="absolute top-4 right-4 z-10 text-white font-tech text-xl">&times;</button>
+            <div class="w-full md:w-1/2 aspect-[3/4] overflow-hidden">
+                <img id="qv-image" src="" class="w-full h-full object-cover">
+            </div>
+            <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+                <span id="qv-category" class="font-tech text-[9px] text-elite-gold tracking-[0.5em] uppercase mb-4">Category</span>
+                <h3 id="qv-name" class="font-luxury text-2xl md:text-3xl text-white tracking-widest uppercase mb-6">Product Name</h3>
+                <p id="qv-desc" class="font-tech text-[11px] text-gray-400 leading-relaxed uppercase tracking-widest mb-10">Description goes here.</p>
+                <div class="flex justify-between items-center mb-10">
+                    <span id="qv-price" class="font-tech text-xl text-white">0 BDT</span>
+                    <span id="qv-stock" class="font-tech text-[9px] text-elite-gold tracking-widest uppercase">In Stock</span>
+                </div>
+                <button class="btn-elite w-full">INITIATE PURCHASE</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, collection, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDAFP0n9HJt3100zXR9TLR9mE9216kZR7M",
+            authDomain: "raiyan-clothing-elite.firebaseapp.com",
+            projectId: "raiyan-clothing-elite",
+            appId: "1:383142148229:web:0bab9bf4a17e854cb311ec"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // 1. MAINTENANCE SWITCH
+        onSnapshot(doc(db, "settings", "siteStatus"), (snapshot) => {
+            const data = snapshot.data();
+            if (data?.maintenance) {
+                document.body.innerHTML = `<div class="maint-screen">
+                    <h1 class="font-luxury text-gold-gradient text-xl tracking-[1em] mb-8">MAINTENANCE ACTIVE</h1>
+                    <p class="font-tech text-[10px] text-gray-500 tracking-[0.5em] uppercase">Recalibrating the Archive.</p>
+                </div>`;
+            }
+        });
+
+        // 2. LIVE PRODUCTS LOAD WITH ANIMATION
+        const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+        onSnapshot(q, (snapshot) => {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            
+            snapshot.forEach((doc) => {
+                const item = doc.data();
+                const isOut = item.stock <= 0;
+                const isHidden = item.isVisible === false;
+                
+                if(!isHidden) {
+                    const card = document.createElement('div');
+                    card.className = "product-card opacity-0 translate-y-10 group cursor-pointer";
+                    card.onclick = () => openQuickView(item);
+                    card.innerHTML = `
+                        <div class="image-container">
+                            <img src="${item.imageUrl}" class="w-full h-full object-cover transition-all duration-[1.5s] ${isOut ? 'grayscale contrast-125' : 'group-hover:scale-110'}">
+                            ${isOut ? `<div class="absolute inset-0 flex items-center justify-center bg-black/60"><span class="font-luxury text-[10px] tracking-[0.5em] border border-white/20 px-6 py-2">ARCHIVED</span></div>` : ''}
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                                <span class="font-tech text-[9px] tracking-widest text-white uppercase">Quick View +</span>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-luxury text-sm tracking-[0.2em] uppercase">${item.name}</h4>
+                                <p class="font-tech text-[10px] text-elite-gold">${item.price} BDT</p>
+                            </div>
+                            <p class="font-tech text-[8px] text-gray-600 tracking-[0.4em] mt-3 uppercase">${item.category || 'Collection Item'}</p>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                }
+            });
+
+            // Trigger GSAP Reveal for cards
+            gsap.to(".product-card", {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power4.out"
+            });
+        });
+
+        // Quick View Function
+        window.openQuickView = (item) => {
+            document.getElementById('qv-image').src = item.imageUrl;
+            document.getElementById('qv-name').innerText = item.name;
+            document.getElementById('qv-price').innerText = `${item.price} BDT`;
+            document.getElementById('qv-desc').innerText = item.description || "No description provided for this archive piece.";
+            document.getElementById('qv-category').innerText = item.category || "Collection Item";
+            document.getElementById('qv-stock').innerText = item.stock > 0 ? "In Stock" : "Sold Out";
+            
+            const qv = document.getElementById('quick-view');
+            qv.classList.remove('pointer-events-none');
+            gsap.to(qv, { opacity: 1, duration: 0.5 });
+        };
+
+        window.closeQuickView = () => {
+            const qv = document.getElementById('quick-view');
+            qv.classList.add('pointer-events-none');
+            gsap.to(qv, { opacity: 0, duration: 0.3 });
+        };
+    </script>
+
+    <script>
+        // LUXURY ENTRANCE ANIMATIONS
+        document.addEventListener('DOMContentLoaded', () => {
+            const tl = gsap.timeline();
+            
+            tl.to("#hero-title", { opacity: 1, duration: 2, y: -20, ease: "power3.out" })
+              .to("#scroll-indicator", { opacity: 1, duration: 1 }, "-=1");
+
+            // Hero Parallax on Scroll
+            gsap.to("#hero-wrap", {
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                },
+                y: -200,
+                opacity: 0
+            });
+        });
+    </script>
+</body>
+</html>
