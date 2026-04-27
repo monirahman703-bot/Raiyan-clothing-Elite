@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RAIYAN CLOTHING - Élite Admin Command Center</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=JetBrains+Mono:wght@100;300;400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 
+                        'elite-green': '#011609', 
+                        'elite-gold': '#D4AF37', 
+                        'factory-dark': '#050505', 
+                        'factory-border': '#1a1a1a',
+                        'admin-panel': '#0a0a0a',
+                        'danger': '#ef4444',
+                        'success': '#22c55e',
+                        'warning': '#f59e0b'
+                    },
+                    fontFamily: { 
+                        'luxury': ['Cinzel', 'serif'], 
+                        'tech': ['JetBrains Mono', 'monospace'], 
+                        'sans': ['Inter', 'sans-serif'] 
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* ==========================================================================
+           Base Styles & Custom Global Scrollbars
+           ========================================================================== */
+        body { 
+            background-color: #011609; 
+            color: white; 
+            margin: 0; 
+            overflow-x: hidden; 
+            font-family: 'Inter', sans-serif; 
+        }
+
+        body::-webkit-scrollbar { 
+            width: 6px; 
+            background: #050505; 
+        }
+
+        body::-webkit-scrollbar-thumb { 
+            background: #D4AF37; 
+            border-radius: 10px; 
+        }
+        
+        .admin-scroll::-webkit-scrollbar { 
+            width: 4px; 
+            height: 4px; 
+            background: #111; 
+        }
+
+        .admin-scroll::-webkit-scrollbar-thumb { 
+            background: #333; 
+            border-radius: 4px; 
+        }
+
+        .admin-scroll:hover::-webkit-scrollbar-thumb { 
+            background: #D4AF37; 
+        }
+
+        /* ==========================================================================
+           Typography & Text Effects
+           ========================================================================== */
+        .text-gold-gradient { 
+            background: linear-gradient(to right, #D4AF37, #FFF, #D4AF37); 
+            -webkit-background-clip: text; 
+            color: transparent; 
+        }
+        
+        /* ==========================================================================
+           UI Glassmorphism Components
+           ========================================================================== */
+        .glass-panel { 
+            background: rgba(5, 5, 5, 0.85); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(212, 175, 55, 0.15); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+        }
+
+        .glass-input { 
+            background: rgba(0,0,0,0.6); 
+            border: 1px solid #222; 
+            color: white; 
+            transition: all 0.3s; 
+        }
+
+        .glass-input:focus { 
+            border-color: #D4AF37; 
+            outline: none; 
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.1); 
+        }
+        
+        /* ==========================================================================
+           Buttons (Standard & Danger Profiles)
+           ========================================================================== */
+        .btn-elite { 
+            border: 1px solid rgba(212, 175, 55, 0.3); 
+            padding: 12px 20px; 
+            font-family: 'JetBrains Mono'; 
+            font-size: 11px; 
+            letter-spacing: 0.1em; 
+            transition: all 0.3s ease; 
+            background: transparent; 
+            color: white; 
+            text-transform: uppercase; 
+            cursor: pointer; 
+        }
+
+        .btn-elite:hover:not(:disabled) { 
+            border-color: #D4AF37; 
+            background: #D4AF37; 
+            color: black; 
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); 
+        }
+
+        .btn-elite:disabled { 
+            opacity: 0.4; 
+            cursor: not-allowed; 
+            border-color: #333; 
+        }
+
+        .btn-danger { 
+            border-color: rgba(239, 68, 68, 0.3); 
+            color: #ef4444; 
+        }
+
+        .btn-danger:hover:not(:disabled) { 
+            background: #ef4444; 
+            color: white; 
+            border-color: #ef4444; 
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); 
+        }
+
+        /* ==========================================================================
+           Data Tables Architecture
+           ========================================================================== */
+        .admin-table { 
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0; 
+        }
+
+        .admin-table th { 
+            background: #000; 
+            color: #888; 
+            font-family: 'JetBrains Mono'; 
+            font-size: 10px; 
+            font-weight: 400; 
+            text-transform: uppercase; 
+            letter-spacing: 0.1em; 
+            padding: 12px; 
+            text-align: left; 
+            border-bottom: 1px solid #222; 
+            top: 0; 
+            position: sticky; 
+            z-index: 10; 
+        }
+
+        .admin-table td { 
+            padding: 16px 12px; 
+            border-bottom: 1px solid #111; 
+            font-size: 13px; 
+            vertical-align: middle; 
+            transition: background 0.2s; 
+        }
+
+        .admin-table tbody tr:hover td { 
+            background: rgba(212, 175, 55, 0.03); 
+        }
+
+        /* ==========================================================================
+           Status Matrix Indicators
+           ========================================================================== */
+        .badge { 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-family: 'JetBrains Mono'; 
+            font-size: 9px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            font-weight: 600; 
+        }
+
+        .badge-pending { 
+            background: rgba(245, 158, 11, 0.1); 
+            color: #f59e0b; 
+            border: 1px solid rgba(245, 158, 11, 0.2); 
+        }
+
+        .badge-processing { 
+            background: rgba(59, 130, 246, 0.1); 
+            color: #3b82f6; 
+            border: 1px solid rgba(59, 130, 246, 0.2); 
+        }
+
+        .badge-shipped { 
+            background: rgba(168, 85, 247, 0.1); 
+            color: #a855f7; 
+            border: 1px solid rgba(168, 85, 247, 0.2); 
+        }
+
+        .badge-delivered { 
+            background: rgba(34, 197, 94, 0.1); 
+            color: #22c55e; 
+            border: 1px solid rgba(34, 197, 94, 0.2); 
+        }
+
+        .badge-cancelled { 
+            background: rgba(239, 68, 68, 0.1); 
+            color: #ef4444; 
+            border: 1px solid rgba(239, 68, 68, 0.2); 
+        }
+
+        /* ==========================================================================
+           File & Media Upload Zone Setup
+           ========================================================================== */
+        .upload-zone { 
+            border: 2px dashed #333; 
+            background: #050505; 
+            transition: all 0.3s; 
+            position: relative; 
+            overflow: hidden; 
+        }
+
+        .upload-zone.dragover { 
+            border-color: #D4AF37; 
+            background: rgba(212, 175, 55, 0.05); 
+        }
+
+        .img-preview-card { 
+            position: relative; 
+            aspect-ratio: 3/4; 
+            border: 1px solid #222; 
+            border-radius: 4px; 
+            overflow: hidden; 
+        }
+
+        .img-preview-card img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.3s; 
+        }
+
+        .img-preview-card:hover img { 
+            transform: scale(1.05); 
+        }
+
+        .remove-img-btn { 
+            position: absolute; 
+            top: 4px; 
+            right: 4px; 
+            background: rgba(0,0,0,0.8); 
+            color: white; 
+            width: 24px; 
+            height: 24px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            border: 1px solid #444; 
+            z-index: 10; 
+            opacity: 0; 
+            transition: opacity 0.2s; 
+        }
+
+        .img-preview-card:hover .remove-img-btn { 
+            opacity: 1; 
+        }
+
+        /* ==========================================================================
+           View Controllers & Transitions
+           ========================================================================== */
+        .view-section { 
+            display: none; 
+            opacity: 0; 
+            animation: fadeIn 0.4s ease forwards; 
+        }
+
+        .view-section.active { 
+            display: block; 
+        }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* ==========================================================================
+           Global Navigation & Sidebar Items
+           ========================================================================== */
+        .nav-item { 
+            display: flex; 
+            align-items: center; 
+            padding: 12px 20px; 
+            color: #888; 
+            font-family: 'JetBrains Mono'; 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.1em; 
+            transition: all 0.3s; 
+            cursor: pointer; 
+            border-left: 2px solid transparent; 
+        }
+
+        .nav-item:hover { 
+            color: white; 
+            background: rgba(255,255,255,0.02); 
+        }
+
+        .nav-item.active { 
+            color: #D4AF37; 
+            border-left-color: #D4AF37; 
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.05) 0%, transparent 100%); 
+        }
+
+        .nav-item svg { 
+            width: 16px; 
+            height: 16px; 
+            margin-right: 12px; 
+        }
+
+        /* ==========================================================================
+           Toast Alert Notifications
+           ========================================================================== */
+        #toast-container { 
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            z-index: 9999; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+        }
+
+        .toast { 
+            background: #0a0a0a; 
+            border-left: 2px solid #D4AF37; 
+            padding: 16px 20px; 
+            font-family: 'JetBrains Mono'; 
+            font-size: 10px; 
+            color: white; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
+            transform: translateX(120%); 
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            min-width: 250px;
+        }
+
+        .toast.show { 
+            transform: translateX(0); 
+        }
+
+        .toast.error { 
+            border-left-color: #ef4444; 
+        }
+
+        .toast.success { 
+            border-left-color: #22c55e; 
+        }
+
+        /* ==========================================================================
+           Security Lock Screen Interface
+           ========================================================================== */
+        #auth-screen { 
+            position: fixed; 
+            inset: 0; 
+            background: #011609; 
+            z-index: 10000; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            transition: opacity 0.5s, visibility 0.5s; 
+        }
+
+        .auth-box { 
+            background: #050505; 
+            border: 1px solid rgba(212, 175, 55, 0.2); 
+            padding: 40px; 
+            border-radius: 8px; 
+            width: 100%; 
+            max-width: 400px; 
+            text-align: center; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
+        }
+
+        /* ==========================================================================
+           Dynamic Modal Architectures
+           ========================================================================== */
+        .admin-modal { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.8); 
+            backdrop-filter: blur(5px); 
+            z-index: 5000; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            opacity: 0; 
+            pointer-events: none; 
+            transition: all 0.3s; 
+        }
+
+        .admin-modal.active { 
+            opacity: 1; 
+            pointer-events: auto; 
+        }
+
+        .modal-content { 
+            background: #0a0a0a; 
+            border: 1px solid #222; 
+            border-radius: 8px; 
+            width: 90%; 
+            max-width: 600px; 
+            max-height: 90vh; 
+            overflow-y: auto; 
+            transform: scale(0.95); 
+            transition: transform 0.3s; 
+        }
+
+        .admin-modal.active .modal-content { 
+            transform: scale(1); 
+        }
+
+        /* ==========================================================================
+           Boolean Toggles / Switches
+           ========================================================================== */
+        .toggle-switch { 
+            position: relative; 
+            display: inline-block; 
+            width: 36px; 
+            height: 20px; 
+        }
+
+        .toggle-switch input { 
+            opacity: 0; 
+            width: 0; 
+            height: 0; 
+        }
+
+        .slider { 
+            position: absolute; 
+            cursor: pointer; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background-color: #333; 
+            transition: .4s; 
+            border-radius: 20px; 
+        }
+
+        .slider:before { 
+            position: absolute; 
+            content: ""; 
+            height: 14px; 
+            width: 14px; 
+            left: 3px; 
+            bottom: 3px; 
+            background-color: white; 
+            transition: .4s; 
+            border-radius: 50%; 
+        }
+
+        input:checked + .slider { 
+            background-color: #D4AF37; 
+        }
+
+        input:checked + .slider:before { 
+            transform: translateX(16px); 
+            background-color: black; 
+        }
+
+        /* ==========================================================================
+           Animated Processing Spinners
+           ========================================================================== */
+        .loader { 
+            border: 2px solid rgba(255,255,255,0.1); 
+            border-left-color: #D4AF37; 
+            border-radius: 50%; 
+            width: 20px; 
+            height: 20px; 
+            animation: spin 1s linear infinite; 
+            display: inline-block; 
+            vertical-align: middle; 
+        }
+
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <div id="toast-container"></div>
+
+    <div id="auth-screen">
+        <div class="auth-box">
+            <h1 class="font-luxury text-3xl text-gold-gradient tracking-[0.3em] mb-2 uppercase">RAIYAN</h1>
+            <p class="font-tech text-[10px] text-gray-500 tracking-[0.2em] mb-8 uppercase">Élite Admin Command Center</p>
+            
+            <form id="login-form" class="space-y-4" onsubmit="event.preventDefault();">
+                <div>
+                    <input type="password" id="admin-pass" class="glass-input w-full p-3 text-center font-tech tracking-widest text-sm rounded" placeholder="ENTER CLEARANCE CODE" required>
+                </div>
+                <button type="submit" class="btn-elite w-full border-elite-gold text-elite-gold hover:bg-elite-gold hover:text-black mt-2">
+                    AUTHENTICATE
+                </button>
+            </form>
+            
+            <div id="login-error" class="text-red-500 font-tech text-[10px] mt-4 hidden tracking-widest uppercase">
+                Access Denied. Invalid Code.
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 font-tech text-[9px] text-gray-600 tracking-widest">
+            ENCRYPTED CONNECTION ESTABLISHED
+        </div>
+    </div>
+
+    <aside class="w-64 bg-factory-dark border-r border-factory-border flex flex-col transition-all duration-300 z-50 absolute h-full lg:relative lg:translate-x-0 -translate-x-full" id="sidebar">
+        <div class="p-6 border-b border-factory-border flex items-center justify-between">
+            <div>
+                <h2 class="font-luxury text-xl text-white tracking-[0.2em]">RAIYAN</h2>
+                <span class="font-tech text-[8px] text-elite-gold tracking-widest uppercase bg-elite-gold/10 px-2 py-0.5 rounded border border-elite-gold/20">Admin v2.0</span>
+            </div>
+            
+            <button id="toggle-sidebar" class="text-gray-500 hover:text-white lg:hidden">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <nav class="flex-1 py-6 space-y-1 overflow-y-auto admin-scroll">
+            <div class="px-6 mb-2 font-tech text-[9px] text-gray-600 tracking-widest uppercase">Core Systems</div>
+            
+            <a class="nav-item active" data-target="dashboard-view">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                </svg>
+                Dashboard
+            </a>
+            
+            <a class="nav-item flex justify-between" data-target="orders-view">
+                <div class="flex items-center">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
+                    Order Management
+                </div>
+                <span id="nav-badge-orders" class="bg-elite-gold text-black text-[9px] px-1.5 py-0.5 rounded font-bold hidden">0</span>
+            </a>
+            
+            <div class="px-6 mt-6 mb-2 font-tech text-[9px] text-gray-600 tracking-widest uppercase">Catalog Database</div>
+            
+            <a class="nav-item" data-target="inventory-view">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+                Active Inventory
+            </a>
+            
+            <a class="nav-item" data-target="add-product-view">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Deploy Artifact
+            </a>
+
+            <a class="nav-item" data-target="customers-view">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                Client Directory
+            </a>
+
+            <div class="px-6 mt-6 mb-2 font-tech text-[9px] text-gray-600 tracking-widest uppercase">System Maintenance</div>
+            
+            <a class="nav-item" data-target="settings-view">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                Configurations
+            </a>
+
+            <a class="nav-item" onclick="triggerBackup()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                </svg>
+                Export DB (CSV)
+            </a>
+            
+            <a class="nav-item text-red-500 hover:text-red-400 hover:bg-red-500/10" onclick="logoutAdmin()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                Secure Logout
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-factory-border">
+            <div class="font-tech text-[9px] text-gray-500 tracking-widest text-center">
+                SYS_TIME: <span id="admin-clock" class="text-elite-gold">00:00:00</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 bg-elite-green relative overflow-hidden flex flex-col">
+        
+        <header class="h-16 bg-factory-dark border-b border-factory-border flex items-center justify-between px-6 z-40">
+            <div class="flex items-center gap-4">
+                <button id="mobile-menu-btn" class="lg:hidden text-white">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <h1 id="current-view-title" class="font-luxury text-lg text-white tracking-[0.2em] uppercase">Command Dashboard</h1>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-2 bg-black/50 px-3 py-1.5 rounded border border-white/10">
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span class="font-tech text-[9px] text-gray-300 tracking-widest uppercase">Firebase Connected</span>
+                </div>
+                <button class="w-8 h-8 rounded-full bg-elite-gold text-black font-tech text-xs font-bold flex items-center justify-center">RY</button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto admin-scroll p-4 md:p-8 relative">
+            
+            <section id="dashboard-view" class="view-section active space-y-6">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    
+                    <div class="glass-panel p-6 rounded relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 text-white/5">
+                            <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-tech text-[10px] text-gray-400 tracking-widest uppercase mb-1">Total Revenue</h3>
+                        <p class="font-luxury text-3xl text-elite-gold" id="dash-revenue">0 <span class="text-sm text-gray-500 font-tech">BDT</span></p>
+                    </div>
+                    
+                    <div class="glass-panel p-6 rounded relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 text-white/5">
+                            <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-tech text-[10px] text-gray-400 tracking-widest uppercase mb-1">Total Dispatches</h3>
+                        <p class="font-luxury text-3xl text-white" id="dash-orders-count">0</p>
+                    </div>
+                    
+                    <div class="glass-panel p-6 rounded relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 text-white/5">
+                            <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l-5.5 9h11z"/><circle cx="17.5" cy="17.5" r="4.5"/><path d="M3 13.5h8v8H3z"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-tech text-[10px] text-gray-400 tracking-widest uppercase mb-1">Active Artifacts</h3>
+                        <p class="font-luxury text-3xl text-white" id="dash-products-count">0</p>
+                    </div>
+                    
+                    <div class="glass-panel p-6 rounded relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 text-white/5">
+                            <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-tech text-[10px] text-red-400 tracking-widest uppercase mb-1">Stock Warnings</h3>
+                        <p class="font-luxury text-3xl text-red-500" id="dash-low-stock">0</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="glass-panel p-6 rounded lg:col-span-2">
+                        <h3 class="font-tech text-[11px] text-white tracking-widest uppercase mb-4 flex justify-between">
+                            <span>Sales Velocity Overview</span>
+                            <span class="text-elite-gold text-[9px]">TRAILING 7 DAYS</span>
+                        </h3>
+                        <div class="w-full h-[300px]">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-panel p-6 rounded flex flex-col h-[300px] lg:h-auto">
+                        <h3 class="font-tech text-[11px] text-white tracking-widest uppercase mb-4">Live Dispatch Feed</h3>
+                        <div class="flex-1 overflow-y-auto admin-scroll space-y-3 pr-2" id="recent-activity-feed">
+                            <div class="text-center font-tech text-xs text-gray-500 py-10">Initializing telemetry...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="orders-view" class="view-section">
+                <div class="glass-panel rounded flex flex-col h-[calc(100vh-140px)]">
+                    
+                    <div class="p-4 border-b border-white/10 flex flex-col md:flex-row gap-4 justify-between bg-black/40 rounded-t">
+                        <div class="flex gap-4 items-center w-full md:w-auto">
+                            <input type="text" id="order-search" placeholder="Query ID, Alias, Comm Link..." class="glass-input px-4 py-2 rounded font-tech text-xs w-full md:w-64">
+                            
+                            <select id="order-filter-status" class="glass-input px-3 py-2 rounded font-tech text-xs cursor-pointer appearance-none">
+                                <option value="ALL">ALL CONDITIONS</option>
+                                <option value="PENDING">AWAITING</option>
+                                <option value="PROCESSING">IN FORGE</option>
+                                <option value="SHIPPED">IN TRANSIT</option>
+                                <option value="DELIVERED">SECURED</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="exportOrdersCSV()" class="btn-elite flex items-center gap-2">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg> 
+                                EXPORT LEDGER
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 overflow-auto admin-scroll">
+                        <table class="admin-table min-w-[900px]">
+                            <thead>
+                                <tr>
+                                    <th class="w-24">Trace ID</th>
+                                    <th>Client Profile</th>
+                                    <th>Asset Specifications</th>
+                                    <th>Timestamp</th>
+                                    <th>Valuation</th>
+                                    <th>Condition</th>
+                                    <th class="text-right">Overrides</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-body">
+                                <tr>
+                                    <td colspan="7" class="text-center py-10 font-tech text-gray-500">
+                                        <div class="loader"></div> Querying Mainframe...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="inventory-view" class="view-section">
+                 <div class="glass-panel rounded flex flex-col h-[calc(100vh-140px)]">
+                    
+                    <div class="p-4 border-b border-white/10 flex flex-col md:flex-row gap-4 justify-between bg-black/40 rounded-t">
+                        <input type="text" id="inventory-search" placeholder="Scan Catalog by Nomenclature..." class="glass-input px-4 py-2 rounded font-tech text-xs w-full md:w-64">
+                        
+                        <button onclick="switchTab('add-product-view')" class="btn-elite bg-elite-gold text-black border-elite-gold flex items-center gap-2 font-bold">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg> 
+                            INITIALIZE ASSET
+                        </button>
+                    </div>
+                    
+                    <div class="flex-1 overflow-auto admin-scroll p-6 bg-[#030303]">
+                        <div id="inventory-grid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6">
+                            <div class="col-span-full text-center py-10 font-tech text-gray-500">
+                                <div class="loader"></div> Synchronizing Database...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="add-product-view" class="view-section">
+                <div class="glass-panel rounded p-6 md:p-8 max-w-5xl mx-auto">
+                    
+                    <div class="flex justify-between items-end border-b border-white/10 pb-4 mb-6">
+                        <div>
+                            <h2 class="font-luxury text-2xl text-white uppercase tracking-widest" id="form-title">Deploy New Artifact</h2>
+                            <p class="font-tech text-[10px] text-gray-500 mt-1 uppercase tracking-widest">Protocol handles media optimization automatically.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="font-tech text-[10px] text-gray-400 uppercase tracking-widest">Network Visibility</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="prod-visible" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <form id="product-form" class="space-y-8">
+                        <input type="hidden" id="edit-prod-id">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block font-tech text-[10px] text-gray-400 uppercase tracking-widest mb-2">Designation Code *</label>
+                                    <input type="text" id="prod-name" required class="glass-input w-full p-3 rounded font-sans text-sm" placeholder="e.g. Élite Onyx Hoodie Series II">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block font-tech text-[10px] text-gray-400 uppercase tracking-widest mb-2">Valuation (BDT) *</label>
+                                        <input type="number" id="prod-price" required min="0" class="glass-input w-full p-3 rounded font-tech text-sm" placeholder="2500">
+                                    </div>
+                                    <div>
+                                        <label class="block font-tech text-[10px] text-gray-400 uppercase tracking-widest mb-2">Reserve Quota *</label>
+                                        <input type="number" id="prod-stock" required min="0" class="glass-input w-full p-3 rounded font-tech text-sm" placeholder="50">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block font-tech text-[10px] text-gray-400 uppercase tracking-widest mb-2">Technical Specifications *</label>
+                                    <textarea id="prod-desc" required class="glass-input w-full p-3 rounded font-sans text-sm h-32 resize-none" placeholder="Provide detailed fabrication specifics, fit matrices, and preservation protocols..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-end">
+                                    <label class="block font-tech text-[10px] text-gray-400 uppercase tracking-widest">Visual Assets (Max 4) *</label>
+                                    <span class="font-tech text-[9px] text-elite-gold" id="img-count-indicator">0/4 Injected</span>
+                                </div>
+                                
+                                <div id="upload-zone" class="upload-zone rounded-lg p-8 flex flex-col items-center justify-center cursor-pointer min-h-[160px]">
+                                    <svg class="w-8 h-8 text-gray-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                    </svg>
+                                    <p class="font-tech text-xs text-gray-400 text-center uppercase tracking-wider mb-1">Initiate Upload Sequence</p>
+                                    <p class="font-tech text-[9px] text-gray-600 text-center">JPG, PNG, WEBP Support</p>
+                                    <input type="file" id="file-input" multiple accept="image/*" class="hidden">
+                                </div>
+
+                                <div id="image-preview-container" class="grid grid-cols-4 gap-3 mt-4 empty:hidden"></div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-white/10 pt-6 flex justify-between items-center bg-black/20 -mx-6 -mb-6 p-6 rounded-b">
+                            <button type="button" class="font-tech text-[10px] text-gray-500 hover:text-white uppercase tracking-widest transition" onclick="resetProductForm()">Scrub Memory</button>
+                            <button type="submit" id="btn-submit-product" class="btn-elite bg-elite-gold text-black border-elite-gold font-bold flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                                TRANSMIT TO CLUSTER
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section id="customers-view" class="view-section">
+                <div class="glass-panel rounded flex flex-col h-[calc(100vh-140px)] p-8 text-center justify-center items-center">
+                    <svg class="w-20 h-20 text-elite-gold mb-6 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <h2 class="font-luxury text-2xl text-white tracking-[0.2em] uppercase mb-2">Client Architecture</h2>
+                    <p class="font-tech text-xs text-gray-500 max-w-md">The CRM Module is currently offline for maintenance. Deep analytical tracking and demographic clustering will resume upon next patch deployment.</p>
+                </div>
+            </section>
+
+            <section id="settings-view" class="view-section">
+                <div class="glass-panel rounded p-8 max-w-3xl mx-auto space-y-8">
+                    <h2 class="font-luxury text-2xl text-white uppercase tracking-widest border-b border-white/10 pb-4">Core Settings</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center bg-black/40 p-4 rounded border border-[#222]">
+                            <div>
+                                <h4 class="font-tech text-sm text-white uppercase mb-1">Defcon Alerts</h4>
+                                <p class="font-sans text-xs text-gray-500">Push notifications for critical low stock parameters.</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="flex justify-between items-center bg-black/40 p-4 rounded border border-[#222]">
+                            <div>
+                                <h4 class="font-tech text-sm text-white uppercase mb-1">Global Tax Matrix</h4>
+                                <p class="font-sans text-xs text-gray-500">Automatically calculate localized VAT distributions.</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="mt-8 pt-6 border-t border-[#222]">
+                            <button class="btn-elite w-full">Synchronize Modifications</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <div id="order-modal" class="admin-modal">
+        <div class="modal-content relative flex flex-col max-h-[90vh]">
+            <button onclick="closeModal('order-modal')" class="absolute top-4 right-4 text-gray-500 hover:text-white font-tech">[ X ]</button>
+            
+            <div class="p-6 border-b border-[#222] bg-black">
+                <h3 class="font-luxury text-xl text-elite-gold tracking-widest uppercase flex items-center gap-3">
+                    Mission Briefing
+                    <span id="modal-order-status" class="badge"></span>
+                </h3>
+                <p class="font-tech text-xs text-gray-500 mt-1" id="modal-order-id">RYN-XXXXXX</p>
+            </div>
+            
+            <div class="p-6 overflow-y-auto flex-1 bg-gradient-to-b from-[#0a0a0a] to-[#050505]">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <div>
+                        <h4 class="font-tech text-[10px] text-gray-400 tracking-widest uppercase mb-4 border-b border-[#222] pb-2">Target Profile</h4>
+                        <div class="space-y-3 font-sans text-sm">
+                            <div class="flex gap-2">
+                                <span class="text-gray-500 w-20">Alias:</span> 
+                                <span class="text-white font-semibold" id="m-cust-name"></span>
+                            </div>
+                            <div class="flex gap-2">
+                                <span class="text-gray-500 w-20">Comms:</span> 
+                                <span class="text-white" id="m-cust-phone"></span>
+                            </div>
+                            <div class="flex gap-2">
+                                <span class="text-gray-500 w-20">Coords:</span> 
+                                <p class="text-white bg-black/50 p-2 rounded border border-white/5 flex-1" id="m-cust-address"></p>
+                            </div>
+                            <div class="flex gap-2 mt-4">
+                                <span class="text-gray-500 w-20">Epoch:</span> 
+                                <span class="text-gray-400 text-xs font-tech" id="m-order-time"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-tech text-[10px] text-gray-400 tracking-widest uppercase mb-4 border-b border-[#222] pb-2">Procured Asset</h4>
+                        <div class="flex gap-4 items-start bg-black/50 p-3 rounded border border-white/5">
+                            <div class="w-20 h-24 bg-[#111] rounded overflow-hidden border border-[#222] flex-shrink-0">
+                                <img id="m-prod-img" src="" class="w-full h-full object-cover" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjEiPjxyZWN0IHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjIiLz48Y2lyY2xlIGN4PSI4LjUiIGN5PSI4LjUiIHI9IjEuNSIvPjxwb2x5bGluZSBwb2ludHM9IjIxIDE1IDE2IDEwIDUgMjEiLz48L3N2Zz4='">
+                            </div>
+                            <div class="flex-1">
+                                <h5 class="font-luxury text-sm text-white mb-1" id="m-prod-name">Asset Classification</h5>
+                                <div class="font-tech text-xs text-gray-400 mb-2">DIMENSION: <span class="text-elite-gold font-bold text-sm" id="m-prod-size"></span></div>
+                                <div class="font-tech text-sm text-white border-t border-[#222] pt-2 mt-2">CAPITAL: <span class="text-elite-gold" id="m-prod-total"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 border-t border-[#222] pt-6">
+                    <h4 class="font-tech text-[10px] text-gray-400 tracking-widest uppercase mb-4">Command Actions</h4>
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-4">
+                            <label class="font-tech text-xs text-gray-300">Alter Condition:</label>
+                            <select id="m-update-status" class="glass-input px-3 py-2 rounded font-tech text-xs flex-1">
+                                <option value="PENDING">PENDING</option>
+                                <option value="PROCESSING">PROCESSING</option>
+                                <option value="SHIPPED">SHIPPED</option>
+                                <option value="DELIVERED">DELIVERED</option>
+                                <option value="CANCELLED">CANCELLED</option>
+                            </select>
+                            <button onclick="updateOrderStatus()" class="btn-elite border-elite-gold text-elite-gold hover:bg-elite-gold hover:text-black">EXECUTE</button>
+                        </div>
+                        <div>
+                            <label class="font-tech text-xs text-gray-300 block mb-2">Operator Log (Visible to tracking route):</label>
+                            <div class="flex gap-4">
+                                <input type="text" id="m-admin-note" class="glass-input px-3 py-2 rounded font-sans text-sm flex-1" placeholder="e.g. Package remanded to delivery contractor...">
+                                <button onclick="updateOrderNote()" class="btn-elite">COMMIT LOG</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4 bg-black border-t border-[#222] flex justify-between items-center rounded-b">
+                <button onclick="deleteOrder()" class="font-tech text-[10px] text-red-500 hover:text-red-400 tracking-widest uppercase transition">[ PURGE RECORD ]</button>
+                <button onclick="printOrder()" class="btn-elite flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                    </svg> 
+                    GENERATE MANIFEST
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="admin-modal z-[6000]">
+        <div class="modal-content !max-w-sm p-6 text-center">
+            <div class="w-16 h-16 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center mx-auto mb-4 border border-red-500/30">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+            </div>
+            <h3 class="font-luxury text-xl text-white mb-2">Confirm Total Erasure</h3>
+            <p class="font-sans text-sm text-gray-400 mb-6">This operation is destructive. The data matrix cannot be restored once purged.</p>
+            <div class="flex gap-4 justify-center">
+                <button onclick="closeModal('confirm-modal')" class="btn-elite w-full">ABORT</button>
+                <button id="confirm-btn-action" class="btn-elite btn-danger w-full font-bold">ERASE</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        /**
+         * 1. FIREBASE SETUP & INITIALIZATION
+         * ----------------------------------------------------------------------
+         * Establishes the primary connection to the Firestore Database.
+         */
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            query, 
+            orderBy, 
+            getDocs, 
+            getDoc, 
+            onSnapshot, 
+            addDoc, 
+            updateDoc, 
+            deleteDoc, 
+            doc, 
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // Global DB Identifiers
+        const firebaseConfig = {
+            apiKey: "AIzaSyDAFP0n9HJt3100zXR9TLR9mE9216kZR7M",
+            authDomain: "raiyan-clothing-elite.firebaseapp.com",
+            projectId: "raiyan-clothing-elite",
+            appId: "1:383142148229:web:0bab9bf4a17e854cb311ec"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        /**
+         * 2. STATE VARIABLES
+         * ----------------------------------------------------------------------
+         * Variables responsible for handling global system runtime states.
+         */
+        let productsData = [];
+        let ordersData = [];
+        let uploadImagesBase64 = [];
+        let currentEditingProductId = null;
+        let currentViewingOrderId = null;
+        let chartInstance = null;
+
+        /**
+         * 3. UTILITY & USER INTERFACE FUNCTIONS
+         * ----------------------------------------------------------------------
+         * Helper functions required across various system interfaces.
+         */
+        
+        /**
+         * Displays a custom animated toast notification.
+         * @param {string} message - Text to display.
+         * @param {string} type - 'success' or 'error' styling.
+         */
+        window.showToast = (message, type = 'success') => {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const svgIcon = type === 'success' 
+                ? `<svg class="w-4 h-4 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                   </svg>`
+                : `<svg class="w-4 h-4 text-red-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                   </svg>`;
+            
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    ${svgIcon}
+                    <span>${message}</span>
+                </div>
+            `;
+            container.appendChild(toast);
+            
+            // Animation Trigger Buffer
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        };
+
+        /** * Modal Interaction Controls 
+         * Controls class toggling and viewport locks.
+         */
+        window.openModal = (id) => {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        window.closeModal = (id) => {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        /** * Live Network Clock 
+         * Synced to the Dhaka Timezone via formatting API.
+         */
+        setInterval(() => {
+            document.getElementById('admin-clock').innerText = new Date().toLocaleTimeString('en-US', { 
+                timeZone: 'Asia/Dhaka', 
+                hour12: false 
+            });
+        }, 1000);
+
+        /** * Data Formatting Utilities 
+         */
+        const formatMoney = (num) => Number(num).toLocaleString('en-IN');
+        
+        const formatDate = (timestamp) => {
+            if (!timestamp) return 'Just now';
+            const d = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            return d.toLocaleString('en-GB', { 
+                day:'2-digit', 
+                month:'short', 
+                year:'numeric', 
+                hour:'2-digit', 
+                minute:'2-digit'
+            });
+        };
+
+        /** * Dynamic Status Badge Generator 
+         */
+        const getStatusBadge = (status) => {
+            const s = status.toUpperCase();
+            let colorClass = 'badge-pending';
+            if(s === 'PROCESSING') colorClass = 'badge-processing';
+            else if(s === 'SHIPPED') colorClass = 'badge-shipped';
+            else if(s === 'DELIVERED') colorClass = 'badge-delivered';
+            else if(s === 'CANCELLED') colorClass = 'badge-cancelled';
+            return `<span class="badge ${colorClass}">${s}</span>`;
+        };
+
+        /**
+         * 4. AUTHENTICATION & SECURE NAVIGATION
+         * ----------------------------------------------------------------------
+         * Handles local session clearance checks and view transitions.
+         */
+        
+        const ADMIN_CODE = "RAIYAN2026"; 
+        
+        let isSystemReady = false;
+
+        const checkAuth = () => {
+            if(sessionStorage.getItem('adminAuth') === 'true') {
+                const authScreen = document.getElementById('auth-screen');
+                authScreen.style.opacity = '0';
+                setTimeout(() => { 
+                    authScreen.style.visibility = 'hidden'; 
+                    authScreen.style.display = 'none'; // Critical fix to completely unblock the pointer-events matrix
+                }, 500);
+                
+                // Prevent duplicate initialization crashes
+                if (!isSystemReady) {
+                    initAdminSystem();
+                    isSystemReady = true;
+                }
+            }
+        };
+
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pass = document.getElementById('admin-pass').value;
+            
+            if(pass === ADMIN_CODE) {
+                sessionStorage.setItem('adminAuth', 'true');
+                checkAuth();
+                showToast('Authentication Confirmed. Link Established.');
+            } else {
+                const errText = document.getElementById('login-error');
+                errText.classList.remove('hidden');
+                document.getElementById('admin-pass').value = '';
+                
+                // GSAP Powered Shake Animation on failure
+                gsap.fromTo('.auth-box', 
+                    {x: -10}, 
+                    {x: 10, duration: 0.1, yoyo: true, repeat: 5, onComplete: () => gsap.set('.auth-box', {x: 0})}
+                );
+            }
+        });
+
+        window.logoutAdmin = () => {
+            sessionStorage.removeItem('adminAuth');
+            window.location.reload();
+        };
+
+        // Initialize Authentication on script load
+        checkAuth();
+
+        /** Navigation Switching Framework */
+        window.switchTab = (targetId) => {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(targetId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const targetNav = document.querySelector(`.nav-item[data-target="${targetId}"]`);
+            if(targetNav) targetNav.classList.add('active');
+
+            const titles = {
+                'dashboard-view': 'Command Dashboard',
+                'orders-view': 'Order Logistics',
+                'inventory-view': 'Inventory Systems',
+                'add-product-view': currentEditingProductId ? 'Re-Configure Asset' : 'Deploy Asset',
+                'customers-view': 'Client Directory',
+                'settings-view': 'Matrix Configurations'
+            };
+            
+            document.getElementById('current-view-title').innerText = titles[targetId] || 'Command Interface';
+
+            // Automatic Mobile Sidebar Retraction Logic
+            if(window.innerWidth < 1024) {
+                const sb = document.getElementById('sidebar');
+                sb.classList.remove('translate-x-0');
+                sb.classList.add('-translate-x-full');
+            }
+        };
+
+        document.querySelectorAll('.nav-item[data-target]').forEach(item => {
+            item.addEventListener('click', () => switchTab(item.dataset.target));
+        });
+
+        // Mobile Sidebar Hardware Interface Triggers
+        const sidebar = document.getElementById('sidebar');
+        document.getElementById('toggle-sidebar').addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            sidebar.classList.remove('-translate-x-full');
+        });
+
+        /**
+         * 5. CORE SYSTEM MAIN INITIALIZATION
+         * ----------------------------------------------------------------------
+         * Fired solely upon successful operator clearance.
+         */
+        function initAdminSystem() {
+            try { listenToProducts(); } catch(e) { console.warn(e); }
+            try { listenToOrders(); } catch(e) { console.warn(e); }
+            try { setupChart(); } catch(e) { console.warn(e); }
+            try { setupImageUploader(); } catch(e) { console.warn(e); }
+            try { setupSearchFilters(); } catch(e) { console.warn(e); }
+            try { setupInactivityTimeout(); } catch(e) { console.warn(e); }
+        }
+
+        /**
+         * 6. CATALOG AND INVENTORY CONTROL SYSTEM
+         * ----------------------------------------------------------------------
+         * Hooks directly to the Firestore collection to yield a live stream.
+         */
+        function listenToProducts() {
+            const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+            onSnapshot(q, (snapshot) => {
+                productsData = [];
+                snapshot.forEach(doc => {
+                    productsData.push({ id: doc.id, ...doc.data() });
+                });
+                renderInventoryGrid();
+                updateDashboardStats();
+            });
+        }
+
+        function renderInventoryGrid(filterText = '') {
+            const grid = document.getElementById('inventory-grid');
+            grid.innerHTML = '';
+            
+            const filtered = productsData.filter(p => p.name.toLowerCase().includes(filterText.toLowerCase()));
+            
+            if(filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-10 font-tech text-gray-500">
+                        No artifacts matched the scan parameters.
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const imgUrl = item.images?.[0] || item.imageUrl || '';
+                const isOut = item.stock <= 0;
+                const isHidden = item.isVisible === false;
+
+                const card = document.createElement('div');
+                card.className = `glass-panel rounded overflow-hidden flex flex-col group ${isHidden ? 'opacity-50' : ''}`;
+                
+                const imageSection = imgUrl 
+                    ? `<img src="${imgUrl}" class="w-full h-full object-cover" loading="lazy">` 
+                    : `<div class="w-full h-full flex items-center justify-center text-[#333]">
+                           <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                               <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                           </svg>
+                       </div>`;
+
+                const badges = `
+                    <div class="absolute top-2 right-2 flex flex-col gap-1">
+                        ${isOut ? `<span class="bg-red-500 text-white text-[8px] font-tech px-2 py-1 rounded uppercase font-bold shadow-lg">Out of Stock</span>` : ''}
+                        ${isHidden ? `<span class="bg-gray-700 text-white text-[8px] font-tech px-2 py-1 rounded uppercase font-bold shadow-lg">Hidden</span>` : ''}
+                    </div>
+                `;
+
+                const actions = `
+                    <div class="absolute inset-0 bg-black/80 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+                        <button onclick="editProduct('${item.id}')" class="w-10 h-10 rounded-full bg-elite-gold text-black flex items-center justify-center hover:scale-110 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                            </svg>
+                        </button>
+                        <button onclick="triggerDeleteProduct('${item.id}')" class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center hover:scale-110 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+
+                card.innerHTML = `
+                    <div class="relative aspect-[3/4] bg-black border-b border-[#222]">
+                        ${imageSection}
+                        ${badges}
+                        ${actions}
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col">
+                        <h4 class="font-luxury text-sm text-white truncate mb-1" title="${item.name}">${item.name}</h4>
+                        <div class="font-tech text-xs text-elite-gold mb-3">${formatMoney(item.price)} BDT</div>
+                        <div class="mt-auto flex justify-between items-center border-t border-[#222] pt-3">
+                            <span class="font-tech text-[10px] text-gray-500 uppercase">Reserves: <span class="text-white">${item.stock}</span></span>
+                            <label class="toggle-switch transform scale-75 origin-right" title="Toggle Broadcast">
+                                <input type="checkbox" onchange="toggleProductVisibility('${item.id}', this.checked)" ${!isHidden ? 'checked' : ''}>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        window.toggleProductVisibility = async (id, isVisible) => {
+            try {
+                await updateDoc(doc(db, "products", id), { isVisible });
+                showToast(`Asset broadcast ${isVisible ? 'enabled' : 'disabled'}.`);
+            } catch(e) { 
+                showToast('Database link failed.', 'error'); 
+            }
+        };
+
+        window.triggerDeleteProduct = (id) => {
+            const btn = document.getElementById('confirm-btn-action');
+            btn.onclick = async () => {
+                btn.innerText = "PURGING...";
+                try {
+                    await deleteDoc(doc(db, "products", id));
+                    closeModal('confirm-modal');
+                    showToast("Asset expunged from system matrix.");
+                } catch(e) { 
+                    showToast("Erasure aborted. Check connection.", "error"); 
+                } finally { 
+                    btn.innerText = "ERASE"; 
+                }
+            };
+            openModal('confirm-modal');
+        };
+
+        window.editProduct = (id) => {
+            const item = productsData.find(p => p.id === id);
+            if(!item) return;
+            
+            currentEditingProductId = id;
+            document.getElementById('form-title').innerText = "Re-Configure Asset Data";
+            
+            document.getElementById('btn-submit-product').innerHTML = `
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg> OVERWRITE DATABASE
+            `;
+            
+            document.getElementById('prod-name').value = item.name;
+            document.getElementById('prod-price').value = item.price;
+            document.getElementById('prod-stock').value = item.stock;
+            document.getElementById('prod-desc').value = item.description || '';
+            document.getElementById('prod-visible').checked = item.isVisible !== false;
+            
+            uploadImagesBase64 = [...(item.images || [item.imageUrl].filter(Boolean))];
+            renderImagePreviews();
+            
+            switchTab('add-product-view');
+        };
+
+        window.resetProductForm = () => {
+            currentEditingProductId = null;
+            document.getElementById('product-form').reset();
+            document.getElementById('form-title').innerText = "Deploy New Artifact";
+            
+            document.getElementById('btn-submit-product').innerHTML = `
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg> TRANSMIT TO CLUSTER
+            `;
+            
+            uploadImagesBase64 = [];
+            renderImagePreviews();
+            document.getElementById('prod-visible').checked = true;
+        };
+
+        /**
+         * 7. MEDIA COMPRESSION & ASSET INJECTION ENGINE
+         * ----------------------------------------------------------------------
+         * Handles local image scaling down to base64 variants.
+         */
+        function setupImageUploader() {
+            const dropZone = document.getElementById('upload-zone');
+            const fileInput = document.getElementById('file-input');
+
+            dropZone.addEventListener('click', () => fileInput.click());
+            
+            dropZone.addEventListener('dragover', (e) => { 
+                e.preventDefault(); 
+                dropZone.classList.add('dragover'); 
+            });
+            
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+            
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+            
+            fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+        }
+
+        async function handleFiles(files) {
+            if (uploadImagesBase64.length >= 4) { 
+                showToast("Maximum sector capacity reached (4 assets).", "error"); 
+                return; 
+            }
+            
+            const numToProcess = Math.min(files.length, 4 - uploadImagesBase64.length);
+            
+            for(let i=0; i < numToProcess; i++) {
+                const file = files[i];
+                if (!file.type.startsWith('image/')) continue;
+                
+                showToast(`Optimizing payload: ${file.name}...`);
+                
+                try {
+                    const compressedBase64 = await compressImageToDataURL(file, 800, 0.7);
+                    
+                    // Calculation to strictly prevent payload denial from Firestore
+                    const stringSize = (compressedBase64.length * (3/4)) / 1024;
+                    if(stringSize > 500) {
+                        showToast(`Data density too high post-compression. Skipping.`, 'error');
+                        continue;
+                    }
+                    
+                    uploadImagesBase64.push(compressedBase64);
+                } catch(e) {
+                    showToast("Optimization engine failure.", "error");
+                }
+            }
+            
+            renderImagePreviews();
+            document.getElementById('file-input').value = '';
+        }
+
+        function compressImageToDataURL(file, maxWidth, quality) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    };
+                    img.onerror = (e) => reject(e);
+                };
+                reader.onerror = (e) => reject(e);
+            });
+        }
+
+        function renderImagePreviews() {
+            const container = document.getElementById('image-preview-container');
+            const countInd = document.getElementById('img-count-indicator');
+            container.innerHTML = '';
+            
+            uploadImagesBase64.forEach((src, index) => {
+                const div = document.createElement('div');
+                div.className = "img-preview-card";
+                
+                const mainTag = index === 0 
+                    ? `<div class="absolute bottom-0 left-0 right-0 bg-elite-gold text-black text-[8px] font-tech text-center py-0.5 font-bold uppercase tracking-widest">Primary</div>` 
+                    : '';
+
+                div.innerHTML = `
+                    <img src="${src}" alt="Preview Asset">
+                    <div class="remove-img-btn" onclick="removeImage(${index})">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </div>
+                    ${mainTag}
+                `;
+                container.appendChild(div);
+            });
+            
+            countInd.innerText = `${uploadImagesBase64.length}/4 Allocated`;
+            document.getElementById('upload-zone').style.display = uploadImagesBase64.length >= 4 ? 'none' : 'flex';
+        }
+
+        window.removeImage = (index) => {
+            uploadImagesBase64.splice(index, 1);
+            renderImagePreviews();
+        };
+
+        // Network Post Request Handling for Final Form Submission
+        document.getElementById('product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-product');
+            const originalText = btn.innerHTML;
+            
+            if(uploadImagesBase64.length === 0) {
+                showToast("Visual verification required. Provide at least 1 image.", "error");
+                return;
+            }
+
+            btn.innerHTML = `<div class="loader"></div> PROCESSING...`;
+            btn.disabled = true;
+
+            const productData = {
+                name: document.getElementById('prod-name').value.trim(),
+                price: parseFloat(document.getElementById('prod-price').value),
+                stock: parseInt(document.getElementById('prod-stock').value),
+                description: document.getElementById('prod-desc').value.trim(),
+                isVisible: document.getElementById('prod-visible').checked,
+                images: uploadImagesBase64,
+                imageUrl: uploadImagesBase64[0],
+                updatedAt: serverTimestamp()
+            };
+
+            try {
+                if(currentEditingProductId) {
+                    await updateDoc(doc(db, "products", currentEditingProductId), productData);
+                    showToast("Asset parameters successfully overwritten.");
+                } else {
+                    productData.createdAt = serverTimestamp();
+                    await addDoc(collection(db, "products"), productData);
+                    showToast("New asset injected into the global matrix.");
+                }
+                resetProductForm();
+                switchTab('inventory-view');
+            } catch(err) {
+                console.error(err);
+                if(err.code === 'resource-exhausted') {
+                    showToast('Payload density exceeded mainframe limits.', 'error');
+                } else {
+                    showToast('Transmission rejected by host.', 'error');
+                }
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        /**
+         * 8. LOGISTICAL TRACKING AND ORDER MONITORING ARCHITECTURE
+         * ----------------------------------------------------------------------
+         * Feeds direct mission parameters from client transactions into UI matrix.
+         */
+        function listenToOrders() {
+            const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+            onSnapshot(q, (snapshot) => {
+                ordersData = [];
+                snapshot.forEach(doc => {
+                    ordersData.push({ id: doc.id, ...doc.data() });
+                });
+                renderOrdersTable();
+                updateDashboardStats();
+                
+                const pendingCount = ordersData.filter(o => o.status === 'PENDING').length;
+                const badge = document.getElementById('nav-badge-orders');
+                
+                if(pendingCount > 0) { 
+                    badge.innerText = pendingCount; 
+                    badge.classList.remove('hidden'); 
+                } else {
+                    badge.classList.add('hidden');
+                }
+            });
+        }
+
+        function renderOrdersTable(searchText = '', filterStatus = 'ALL') {
+            const tbody = document.getElementById('orders-table-body');
+            tbody.innerHTML = '';
+
+            let filtered = ordersData.filter(o => {
+                const searchStr = `${o.trackingId} ${o.customer?.name} ${o.customer?.phone}`.toLowerCase();
+                const matchSearch = searchStr.includes(searchText.toLowerCase());
+                const matchStatus = filterStatus === 'ALL' || o.status === filterStatus;
+                return matchSearch && matchStatus;
+            });
+
+            if(filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-10 font-tech text-gray-500">
+                            Zero matches found in telemetry data.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filtered.forEach(order => {
+                const productMatch = productsData.find(p => p.id === order.productId);
+                const pImg = productMatch?.images?.[0] || productMatch?.imageUrl || 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+
+                const tr = document.createElement('tr');
+                tr.className = "group cursor-pointer";
+                tr.onclick = (e) => { 
+                    if(!e.target.closest('button') && !e.target.closest('select')) {
+                        viewOrderDetails(order.id); 
+                    }
+                };
+                
+                tr.innerHTML = `
+                    <td class="font-tech text-elite-gold text-xs">${order.trackingId}</td>
+                    <td>
+                        <div class="font-sans text-white text-sm truncate max-w-[150px]">${order.customer?.name}</div>
+                        <div class="font-tech text-gray-500 text-[10px]">${order.customer?.phone}</div>
+                    </td>
+                    <td>
+                        <div class="flex items-center gap-3">
+                            <img src="${pImg}" class="w-8 h-10 object-cover rounded border border-[#222]">
+                            <div>
+                                <div class="font-sans text-white text-sm truncate max-w-[150px]">${order.productName}</div>
+                                <div class="font-tech text-gray-500 text-[10px]">DIM: ${order.size}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="font-tech text-gray-400 text-xs">${formatDate(order.createdAt)}</td>
+                    <td class="font-tech text-white text-sm">${order.pricing?.total}</td>
+                    <td>${getStatusBadge(order.status)}</td>
+                    <td class="text-right">
+                        <select onchange="quickUpdateStatus('${order.id}', this.value)" class="glass-input px-2 py-1 rounded font-tech text-[10px] w-28 mr-2" onclick="(e)=>e.stopPropagation()">
+                            <option value="PENDING" ${order.status==='PENDING'?'selected':''}>PENDING</option>
+                            <option value="PROCESSING" ${order.status==='PROCESSING'?'selected':''}>PROCESSING</option>
+                            <option value="SHIPPED" ${order.status==='SHIPPED'?'selected':''}>SHIPPED</option>
+                            <option value="DELIVERED" ${order.status==='DELIVERED'?'selected':''}>DELIVERED</option>
+                        </select>
+                        <button onclick="viewOrderDetails('${order.id}')" class="text-gray-400 hover:text-white transition">
+                            <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.quickUpdateStatus = async (id, newStatus) => {
+            try {
+                await updateDoc(doc(db, "orders", id), { 
+                    status: newStatus, 
+                    updatedAt: serverTimestamp() 
+                });
+                showToast(`Logistics shifted to condition: ${newStatus}`);
+            } catch(e) { 
+                showToast("Status overwrite failed.", "error"); 
+            }
+        };
+
+        window.viewOrderDetails = (id) => {
+            const order = ordersData.find(o => o.id === id);
+            if(!order) return;
+            currentViewingOrderId = id;
+
+            document.getElementById('modal-order-id').innerText = order.trackingId;
+            document.getElementById('modal-order-status').outerHTML = `<span id="modal-order-status">${getStatusBadge(order.status)}</span>`;
+            
+            document.getElementById('m-cust-name').innerText = order.customer.name;
+            document.getElementById('m-cust-phone').innerText = order.customer.phone;
+            document.getElementById('m-cust-address').innerText = order.customer.address;
+            document.getElementById('m-order-time').innerText = formatDate(order.createdAt);
+
+            const productMatch = productsData.find(p => p.id === order.productId);
+            document.getElementById('m-prod-img').src = productMatch?.images?.[0] || productMatch?.imageUrl || '';
+            document.getElementById('m-prod-name').innerText = order.productName;
+            document.getElementById('m-prod-size').innerText = order.size;
+            document.getElementById('m-prod-total').innerText = order.pricing.total;
+
+            document.getElementById('m-update-status').value = order.status;
+            document.getElementById('m-admin-note').value = order.adminNote || '';
+
+            openModal('order-modal');
+        };
+
+        window.updateOrderStatus = async () => {
+            if(!currentViewingOrderId) return;
+            const newStatus = document.getElementById('m-update-status').value;
+            await quickUpdateStatus(currentViewingOrderId, newStatus);
+            document.getElementById('modal-order-status').outerHTML = `<span id="modal-order-status">${getStatusBadge(newStatus)}</span>`;
+        };
+
+        window.updateOrderNote = async () => {
+            if(!currentViewingOrderId) return;
+            const note = document.getElementById('m-admin-note').value.trim();
+            try {
+                await updateDoc(doc(db, "orders", currentViewingOrderId), { adminNote: note });
+                showToast("Operation log successfully appended.");
+            } catch(e) { 
+                showToast("System failed to commit log.", "error"); 
+            }
+        };
+
+        window.deleteOrder = () => {
+            if(!currentViewingOrderId) return;
+            const btn = document.getElementById('confirm-btn-action');
+            btn.onclick = async () => {
+                btn.innerText = "PURGING...";
+                try {
+                    await deleteDoc(doc(db, "orders", currentViewingOrderId));
+                    closeModal('confirm-modal');
+                    closeModal('order-modal');
+                    showToast("Logistical record fully expunged.");
+                } catch(e) { 
+                    showToast("Erasure failed.", "error"); 
+                } finally { 
+                    btn.innerText = "ERASE"; 
+                }
+            };
+            openModal('confirm-modal');
+        };
+
+        /**
+         * ======================================================================
+         * FIXED PRINTING MECHANISM MODULE
+         * Contains corrected onafterprint logic to fix browser dismissal bug
+         * ======================================================================
+         */
+        window.printOrder = () => {
+            const order = ordersData.find(o => o.id === currentViewingOrderId);
+            if(!order) {
+                showToast("Error locating target profile memory in core matrix.", "error");
+                return;
+            }
+            
+            const printWin = window.open('', '_blank', 'width=800,height=900,menubar=no,toolbar=no,scrollbars=yes');
+            if(!printWin) {
+                showToast("Pop-up blocker detected. Matrix manifest rendering halted.", "error");
+                return;
+            }
+
+            const printDateStr = formatDate(order.createdAt);
+            const currentSystemDate = new Date().toLocaleString();
+
+            const cName = order.customer?.name || 'UNKNOWN AGENT';
+            const cPhone = order.customer?.phone || 'NO COMM LINK';
+            const cAddress = order.customer?.address || 'COORDINATES CLASSIFIED';
+            
+            const oProductName = order.productName || 'UNIDENTIFIED ARTIFACT';
+            const oSize = order.size || 'N/A';
+            const oTotal = order.pricing?.total || '0 BDT';
+
+            printWin.document.write(`
+                <!DOCTYPE html>
+                <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>Manifest - ${order.trackingId}</title>
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+                            
+                            body { 
+                                font-family: 'JetBrains Mono', Courier, monospace; 
+                                padding: 40px; 
+                                color: #111; 
+                                max-width: 800px; 
+                                margin: 0 auto; 
+                                font-size: 14px;
+                            }
+                            h1 { 
+                                text-transform: uppercase; 
+                                letter-spacing: 4px; 
+                                border-bottom: 2px solid #000; 
+                                padding-bottom: 15px; 
+                                text-align: center;
+                                font-weight: 700;
+                            }
+                            .manifest-header {
+                                margin-bottom: 40px;
+                            }
+                            .grid-layout { 
+                                display: flex; 
+                                justify-content: space-between; 
+                                margin-top: 30px; 
+                            }
+                            .data-box { 
+                                border: 1px solid #ddd; 
+                                padding: 20px; 
+                                width: 100%; 
+                                background-color: #f9f9f9;
+                                border-radius: 4px;
+                            }
+                            table { 
+                                width: 100%; 
+                                border-collapse: collapse; 
+                                margin-top: 40px; 
+                            }
+                            th, td { 
+                                border: 1px solid #111; 
+                                padding: 12px; 
+                                text-align: left; 
+                            }
+                            th {
+                                background-color: #f1f1f1;
+                                font-weight: 700;
+                            }
+                            .footer-stamp {
+                                margin-top: 80px; 
+                                text-align: center; 
+                                font-size: 11px; 
+                                color: #777;
+                                border-top: 1px dashed #ccc;
+                                padding-top: 20px;
+                            }
+                            
+                            /* Ensure structural integrity upon physical media conversion */
+                            @media print {
+                                body { padding: 0; margin: 0; }
+                                .data-box { border: 1px solid #000; background-color: transparent; }
+                                th { background-color: #eee !important; -webkit-print-color-adjust: exact; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>RAIYAN CLOTHING ÉLITE</h1>
+                        
+                        <div class="manifest-header">
+                            <p><strong>Tracking Registry:</strong> ${order.trackingId}</p>
+                            <p><strong>Temporal Stamp:</strong> ${printDateStr}</p>
+                        </div>
+                        
+                        <div class="grid-layout">
+                            <div class="data-box">
+                                <h3 style="margin-top:0; border-bottom:1px solid #ddd; padding-bottom:10px;">DISPATCH COORDINATES</h3>
+                                <p style="margin-bottom:0; line-height: 1.6;">
+                                    <strong>Agent Alias:</strong> ${cName}<br>
+                                    <strong>Comm Link:</strong> ${cPhone}<br>
+                                    <strong>Sector / Zone:</strong> ${cAddress}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Classified Asset Designation</th>
+                                    <th>Dimension</th>
+                                    <th>Capital Yield</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>${oProductName}</td>
+                                    <td>${oSize}</td>
+                                    <td>${oTotal}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="footer-stamp">
+                            <p>Authentication Seal - Élite Systems Cluster</p>
+                            <p>Generated by Operator Protocol on: ${currentSystemDate}</p>
+                        </div>
+
+                        <script>
+                            window.onload = function() {
+                                window.focus();
+                                window.print();
+                                
+                                window.onafterprint = function() { 
+                                    window.close(); 
+                                };
+                            };
+                        <\/script>
+                    </body>
+                </html>
+            `);
+            printWin.document.close();
+        };
+
+        window.exportOrdersCSV = () => {
+            if(ordersData.length === 0) { 
+                showToast("Matrix holds no data.", "error"); 
+                return; 
+            }
+            
+            let csv = 'Tracking ID,Date,Customer Name,Phone,Address,Product,Size,Total,Status,Note\n';
+            
+            ordersData.forEach(o => {
+                const date = o.createdAt ? (o.createdAt.toDate ? o.createdAt.toDate().toISOString() : o.createdAt) : '';
+                const addr = `"${(o.customer?.address || '').replace(/"/g, '""')}"`;
+                const note = `"${(o.adminNote || '').replace(/"/g, '""')}"`;
+                
+                csv += `${o.trackingId},${date},${o.customer?.name},${o.customer?.phone},${addr},${o.productName},${o.size},${o.pricing?.total},${o.status},${note}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `RAIYAN_DB_DUMP_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            
+            showToast("Database dump completed securely.");
+        };
+        
+        window.triggerBackup = window.exportOrdersCSV;
+
+        /**
+         * 9. SYSTEM ANALYTICS & VISUALIZATION PROTOCOLS
+         * ----------------------------------------------------------------------
+         * Feeds metrics into ChartJS mapping module.
+         */
+        function updateDashboardStats() {
+            document.getElementById('dash-orders-count').innerText = ordersData.length;
+            document.getElementById('dash-products-count').innerText = productsData.filter(p => p.isVisible !== false).length;
+            document.getElementById('dash-low-stock').innerText = productsData.filter(p => p.stock <= 5).length;
+            
+            const rev = ordersData
+                .filter(o => o.status === 'DELIVERED' || o.status === 'SHIPPED')
+                .reduce((acc, o) => {
+                    const val = parseFloat(o.pricing?.total?.replace(/[^0-9.-]+/g, '')) || 0;
+                    return acc + val;
+                }, 0);
+                
+            document.getElementById('dash-revenue').innerHTML = `${formatMoney(rev)} <span class="text-sm text-gray-500 font-tech">BDT</span>`;
+
+            const feed = document.getElementById('recent-activity-feed');
+            feed.innerHTML = '';
+            
+            ordersData.slice(0, 10).forEach(o => {
+                feed.innerHTML += `
+                    <div class="flex items-center gap-3 border-b border-[#111] pb-2 cursor-pointer hover:bg-white/5 p-2 rounded transition" onclick="viewOrderDetails('${o.id}')">
+                        <div class="w-8 h-8 rounded-full bg-black border border-[#222] flex items-center justify-center text-elite-gold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1 overflow-hidden">
+                            <div class="font-tech text-[10px] text-white truncate">
+                                <span class="text-elite-gold">${o.trackingId}</span> • ${o.productName}
+                            </div>
+                            <div class="font-sans text-[10px] text-gray-500 truncate">
+                                ${o.customer?.name} • ${getStatusBadge(o.status)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            updateChartData();
+        }
+
+        function setupChart() {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            Chart.defaults.color = '#666';
+            Chart.defaults.font.family = "'JetBrains Mono', monospace";
+            
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Capital Flow (BDT)',
+                        data: [0,0,0,0,0,0,0], 
+                        borderColor: '#D4AF37',
+                        backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#000',
+                        pointBorderColor: '#D4AF37'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#1a1a1a' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function updateChartData() {
+            if(!chartInstance) return;
+            const today = new Date();
+            const counts = [0,0,0,0,0,0,0];
+            const labels = [];
+            
+            for(let i=6; i>=0; i--) {
+                const d = new Date(today);
+                d.setDate(d.getDate() - i);
+                labels.push(d.toLocaleDateString('en-US', {weekday:'short'}));
+            }
+
+            ordersData.forEach(o => {
+                if(!o.createdAt) return;
+                const d = o.createdAt.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
+                const diffTime = Math.abs(today - d);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                if(diffDays <= 7 && diffDays > 0) {
+                    const val = parseFloat(o.pricing?.total?.replace(/[^0-9.-]+/g, '')) || 0;
+                    counts[7 - diffDays] += val;
+                }
+            });
+
+            chartInstance.data.labels = labels;
+            chartInstance.data.datasets[0].data = counts;
+            chartInstance.update();
+        }
+
+        /**
+         * 10. REAL-TIME SEARCH DELEGATION PROTOCOL
+         * ----------------------------------------------------------------------
+         */
+        function setupSearchFilters() {
+            const os = document.getElementById('order-search');
+            const ofs = document.getElementById('order-filter-status');
+            
+            const trigFilter = () => renderOrdersTable(os.value, ofs.value);
+            
+            os.addEventListener('input', trigFilter);
+            ofs.addEventListener('change', trigFilter);
+
+            document.getElementById('inventory-search').addEventListener('input', (e) => {
+                renderInventoryGrid(e.target.value);
+            });
+        }
+
+        /**
+         * 11. AUTOMATIC SYSTEM INACTIVITY SECURITY 
+         * ----------------------------------------------------------------------
+         * Closes the session if operator walks away to preserve database integrity.
+         */
+        function setupInactivityTimeout() {
+            let timeout;
+            const TIMEOUT_MS = 15 * 60 * 1000; // 15 Minutes Timeout Protocol
+            
+            const resetTimer = () => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    if(sessionStorage.getItem('adminAuth')) {
+                        logoutAdmin();
+                    }
+                }, TIMEOUT_MS);
+            };
+            
+            window.addEventListener('mousemove', resetTimer);
+            window.addEventListener('keydown', resetTimer);
+            window.addEventListener('click', resetTimer);
+            window.addEventListener('scroll', resetTimer);
+            resetTimer();
+        }
+
+    </script>
+</body>
+</html>
