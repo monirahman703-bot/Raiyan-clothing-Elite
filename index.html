@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAIYAN CLOTHING ÉLITE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RAIYAN CLOTHING</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=JetBrains+Mono:wght@100;300&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=JetBrains+Mono:wght@100;300;400;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -14,7 +14,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { 'elite-green': '#011609', 'elite-gold': '#D4AF37' },
+                    colors: { 'elite-green': '#011609', 'elite-gold': '#D4AF37', 'factory-dark': '#050505', 'factory-border': '#1a1a1a' },
                     fontFamily: { 'luxury': ['Cinzel', 'serif'], 'tech': ['JetBrains Mono', 'monospace'], 'sans': ['Inter', 'sans-serif'] }
                 }
             }
@@ -22,130 +22,237 @@
     </script>
 
     <style>
-        body { background-color: #011609; color: white; margin: 0; overflow-x: hidden; }
-        body::-webkit-scrollbar { width: 3px; }
+        body { background-color: #011609; color: white; margin: 0; overflow-x: hidden; cursor: none; }
+        body::-webkit-scrollbar { width: 4px; background: #050505;}
         body::-webkit-scrollbar-thumb { background: #D4AF37; }
         
-        .grain-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.04; pointer-events: none; z-index: 100; }
+        #preloader { position: fixed; inset: 0; background: #011609; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 1s ease; }
+        
+        .cursor-dot { width: 6px; height: 6px; background: #D4AF37; border-radius: 50%; position: fixed; pointer-events: none; z-index: 10000; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s; }
+        .cursor-outline { width: 30px; height: 30px; border: 1px solid rgba(212, 175, 55, 0.5); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background 0.2s; }
+        
+        #scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: #D4AF37; z-index: 1000; width: 0%; }
+
+        .grain-overlay { position: fixed; inset: 0; background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.05; pointer-events: none; z-index: 100; transition: transform 0.1s; }
         .text-gold-gradient { background: linear-gradient(to right, #D4AF37, #FFF, #D4AF37); -webkit-background-clip: text; color: transparent; }
         
-        /* Hero Layering */
-        #hero-section { position: fixed; top: 0; left: 0; z-index: 10; width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; }
+        #hero-section { position: fixed; top: 0; left: 0; z-index: 10; width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #main-content { position: relative; z-index: 20; margin-top: 100vh; background: #011609; box-shadow: 0 -50px 100px rgba(0,0,0,0.9); }
 
-        .image-container { aspect-ratio: 3/4; background: #0a0a0a; border: 1px solid rgba(212, 175, 55, 0.1); overflow: hidden; position: relative; }
-        .product-card:hover .image-container { border-color: #D4AF37; }
+        .product-card { background: linear-gradient(180deg, #050505 0%, #0a0a0a 100%); border: 1px solid rgba(255,255,255,0.05); padding: 12px; transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.4s; }
+        .product-card:hover { border-color: rgba(212, 175, 55, 0.3); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .image-container { aspect-ratio: 3/4; background: #000; overflow: hidden; position: relative; border: 1px solid transparent; transition: border 0.3s; }
+        .product-card:hover .image-container { border-color: rgba(212, 175, 55, 0.5); }
         
-        .reveal-text { overflow: hidden; display: block; }
+        .btn-elite { border: 1px solid rgba(212, 175, 55, 0.3); padding: 16px 24px; font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.2em; transition: all 0.4s ease; background: transparent; color: white; text-transform: uppercase; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px;}
+        .btn-elite:hover:not(:disabled) { border-color: #D4AF37; background: #D4AF37; color: black; }
+        .btn-elite:disabled { opacity: 0.3; cursor: not-allowed; }
 
-        /* Maintenance Screen */
-        .maint-screen { height: 100vh; width: 100vw; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: fixed; inset: 0; z-index: 9999; }
+        .input-group { position: relative; margin-bottom: 20px; }
+        .input-elite { background: rgba(0,0,0,0.5); border: 1px solid #333; color: white; padding: 16px 14px 10px; font-family: 'Inter'; font-size: 14px; width: 100%; outline: none; transition: all 0.3s; border-radius: 4px;}
+        .input-elite:focus { border-color: #D4AF37; background: #000; }
+        .input-label { position: absolute; left: 14px; top: 14px; color: #666; font-family: 'JetBrains Mono'; font-size: 10px; transition: 0.3s; pointer-events: none; text-transform: uppercase; letter-spacing: 1px;}
+        .input-elite:focus ~ .input-label, .input-elite:not(:placeholder-shown) ~ .input-label { top: 4px; font-size: 8px; color: #D4AF37; }
         
-        /* Interactive Elements */
-        .btn-elite { border: 1px solid rgba(212, 175, 55, 0.3); padding: 12px 24px; font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.3em; transition: all 0.5s ease; position: relative; overflow: hidden; }
-        .btn-elite:hover { border-color: #D4AF37; background: #D4AF37; color: black; }
+        .size-btn { border: 1px solid #333; padding: 12px; text-align: center; cursor: pointer; transition: all 0.3s; font-family: 'JetBrains Mono'; font-size: 12px;}
+        .size-btn.active { border-color: #D4AF37; background: rgba(212, 175, 55, 0.1); color: #D4AF37; }
+
+        .fullscreen-overlay { position: fixed; inset: 0; background: #050505; z-index: 200; overflow-y: auto; transform: translateY(100%); display: none; }
+        .checkout-panel { position: fixed; right: 0; top: 0; height: 100%; width: 100%; max-width: 500px; background: #050505; border-left: 1px solid #1a1a1a; z-index: 300; transform: translateX(100%); overflow-y: auto; display: none;}
+        
+        .blur-modal { position: fixed; inset: 0; background: rgba(1, 22, 9, 0.75); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 500; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
+        .blur-modal.active { opacity: 1; pointer-events: auto; }
+        .modal-box { background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%); border: 1px solid rgba(212, 175, 55, 0.3); padding: 40px; border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); transform: translateY(20px); transition: transform 0.4s; width: 90%; max-width: 400px; text-align: center;}
+        .blur-modal.active .modal-box { transform: translateY(0); }
+
+        .factory-bg { background-image: linear-gradient(#111 1px, transparent 1px), linear-gradient(90deg, #111 1px, transparent 1px); background-size: 40px 40px; }
+        
+        #pd-image { transition: transform 0.5s ease; }
+        .img-zoom-container:hover #pd-image { transform: scale(1.1); }
+
+        #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: #0a0a0a; border-left: 2px solid #D4AF37; padding: 16px 24px; font-family: 'JetBrains Mono'; font-size: 10px; text-transform: uppercase; color: white; transform: translateX(120%); transition: transform 0.4s; }
+        .toast.show { transform: translateX(0); }
+        
+        #btn-back-to-top { position: fixed; bottom: 30px; left: 30px; z-index: 90; background: #D4AF37; color: black; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        #btn-back-to-top.visible { opacity: 1; pointer-events: auto; }
     </style>
 </head>
-<body class="antialiased">
-    <div class="grain-overlay"></div>
+<body>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
 
-    <nav class="fixed top-0 w-full z-[100] px-6 py-8 flex justify-between items-center mix-blend-difference">
-        <div class="font-luxury text-sm tracking-[0.5em]">Èlite</div>
-        <div class="flex gap-8 font-tech text-[9px] uppercase tracking-widest text-gray-400">
-            <a href="#" class="hover:text-white transition-colors">Archive</a>
-            <a href="#" class="hover:text-white transition-colors">Contact</a>
+    <div id="preloader">
+        <h2 class="font-luxury text-3xl text-gold-gradient tracking-[0.5em] animate-pulse">RAIYAN</h2>
+    </div>
+
+    <div id="scroll-progress"></div>
+    <div class="grain-overlay" id="grain"></div>
+    <div id="toast-container"></div>
+    <div id="btn-back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">&#8593;</div>
+
+    <nav class="fixed top-0 w-full z-[100] px-4 md:px-6 py-6 flex justify-between items-center transition-all duration-300" id="main-nav">
+        <div class="font-luxury text-xl tracking-[0.4em] text-white cursor-pointer hover:text-elite-gold transition" onclick="window.scrollTo(0,0)">RAIYAN</div>
+        <button class="md:hidden text-white hover:text-elite-gold z-[110]" onclick="document.getElementById('mobile-menu').classList.toggle('translate-x-full')">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <div class="hidden md:flex gap-8 font-tech text-[10px] uppercase tracking-widest text-gray-300">
+            <a href="#collection" class="hover:text-elite-gold transition-colors duration-300">Collection</a>
+            <button onclick="openTrackModal()" class="hover:text-elite-gold transition-colors duration-300">Track Order</button>
         </div>
     </nav>
 
-  <section id="hero-section" class="pointer-events-none">
-    <div id="hero-wrap" class="text-center px-4 w-full max-w-7xl mx-auto">
-        <h1 class="font-luxury text-4xl md:text-7xl tracking-[0.3em] md:tracking-[0.6em] leading-tight uppercase opacity-0" id="hero-title">
-            <span class="block">RAIYAN</span>
-            <span class="text-gold-gradient block mt-2">CLOTHING ÉLITE</span>
-        </h1>
-        
-        <div class="mt-24 opacity-0" id="scroll-indicator">
-            <div class="w-[1px] h-20 bg-gradient-to-b from-elite-gold/60 to-transparent mx-auto relative">
-                 <p class="absolute -top-12 left-1/2 -translate-x-1/2 font-tech text-[8px] text-elite-gold/60 tracking-[0.6em] whitespace-nowrap uppercase animate-pulse">
-                    Scroll to Explore
-                 </p>
+    <div id="mobile-menu" class="fixed inset-0 bg-black/95 backdrop-blur-md z-[105] transform translate-x-full transition-transform duration-300 flex flex-col items-center justify-center gap-8 font-tech text-sm tracking-[0.3em] uppercase">
+        <a href="#collection" onclick="document.getElementById('mobile-menu').classList.add('translate-x-full')" class="hover:text-elite-gold">Collection</a>
+        <button onclick="document.getElementById('mobile-menu').classList.add('translate-x-full'); openTrackModal();" class="hover:text-elite-gold">Track Order</button>
+        <button onclick="document.getElementById('mobile-menu').classList.add('translate-x-full')" class="mt-10 text-gray-500 text-xs">[ CLOSE ]</button>
+    </div>
+
+    <section id="hero-section" class="pointer-events-none">
+        <div id="hero-wrap" class="text-center w-full px-2">
+            <h1 class="font-luxury text-4xl sm:text-6xl md:text-8xl tracking-[0.1em] sm:tracking-[0.3em] md:tracking-[0.5em] leading-tight uppercase opacity-0 w-full" id="hero-title">
+                <span class="block text-white/90">RAIYAN</span>
+                <span class="text-gold-gradient block mt-2 text-2xl sm:text-4xl md:text-6xl">CLOTHING ÉLITE</span>
+            </h1>
+            <div class="mt-24 opacity-0 pointer-events-auto cursor-pointer flex flex-col items-center justify-center" id="scroll-indicator" onclick="document.getElementById('collection').scrollIntoView({behavior: 'smooth'})">
+                <p class="font-tech text-[9px] text-white/50 tracking-[0.4em] uppercase hover:text-elite-gold transition-colors mb-4">Explore Collection</p>
+                <div class="w-[1px] h-16 bg-gradient-to-b from-elite-gold to-transparent"></div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <div id="main-content">
-        <section class="min-h-screen w-full py-24 md:py-48 px-6 lg:px-24">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 md:mb-40 gap-10">
-                <div class="max-w-2xl">
-                    <span class="font-tech text-[10px] text-elite-gold tracking-[0.5em] uppercase block mb-4">Established 2026</span>
-                    <h2 class="font-luxury text-3xl md:text-5xl text-gold-gradient tracking-widest uppercase leading-tight">Handcrafted <br>Technical Garments</h2>
-                </div>
-                <p class="font-tech text-[10px] text-gray-500 uppercase tracking-[0.3em] max-w-xs text-right hidden md:block">
-                    Every piece is engineered for longevity and aesthetic dominance.
-                </p>
+        <section id="collection" class="min-h-screen w-full py-24 md:py-32 px-4 md:px-16 mx-auto max-w-[1600px]">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 border-b border-white/10 pb-8 gap-6">
+                <div><h2 class="font-luxury text-3xl md:text-5xl text-white tracking-widest uppercase leading-tight">The Collection</h2></div>
+                <div class="flex gap-4 font-tech text-[9px] text-gray-500 tracking-[0.2em] uppercase"><span class="text-elite-gold cursor-pointer border-b border-elite-gold pb-1">ALL ITEMS</span></div>
             </div>
-
-            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24">
-                </div>
+            <div id="loading-state" class="w-full py-20 flex flex-col items-center justify-center text-elite-gold font-tech text-[10px] tracking-[0.5em] uppercase">
+                <div class="w-8 h-8 border-t-2 border-elite-gold rounded-full animate-spin mb-4"></div>Loading Products...
+            </div>
+            <div id="product-grid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8"></div>
         </section>
-
-        <footer class="bg-black pt-32 pb-12 px-6 lg:px-24 border-t border-white/5">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-16 mb-32">
-                <div class="md:col-span-6">
-                    <h3 class="font-luxury text-3xl text-gold-gradient mb-8 tracking-[0.4em]">RAIYAN ÉLITE</h3>
-                    <div class="w-20 h-[1px] bg-elite-gold/30 mb-8"></div>
-                    <p class="font-tech text-[11px] text-gray-500 leading-relaxed max-w-sm uppercase tracking-widest">
-                        Dhaka, Bangladesh — Specialized in structural tailoring and technical luxury wear. 
-                    </p>
+        
+        <footer class="bg-[#020202] pt-20 pb-10 px-6 lg:px-16 border-t border-white/5">
+            <div class="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 mb-16 text-center md:text-left">
+                <div>
+                    <h3 class="font-luxury text-xl text-gold-gradient mb-4 tracking-[0.3em]">RAIYAN</h3>
+                    <p class="font-tech text-[10px] text-gray-500 tracking-widest leading-loose uppercase">Premium streetwear brand based in Bangladesh. Order authentic quality.</p>
                 </div>
-                <div class="md:col-span-3 text-[10px] font-tech space-y-6">
-                    <h4 class="text-elite-gold tracking-widest uppercase opacity-40">The Studio</h4>
-                    <a href="#" class="block text-gray-500 hover:text-white transition-all uppercase tracking-widest">New Arrivals</a>
-                    <a href="#" class="block text-gray-500 hover:text-white transition-all uppercase tracking-widest">The Archive</a>
-                    <a href="#" class="block text-gray-500 hover:text-white transition-all uppercase tracking-widest">Custom Orders</a>
+                <div>
+                    <h4 class="font-tech text-[11px] text-white tracking-[0.2em] uppercase mb-4">Help & Support</h4>
+                    <ul class="space-y-3 font-tech text-[10px] text-gray-500 tracking-widest uppercase">
+                        <li><button onclick="openTrackModal()" class="hover:text-elite-gold transition-colors cursor-pointer">Track My Order</button></li>
+                        <li><a href="#" target="_blank" class="hover:text-elite-gold transition-colors">Delivery Info</a></li>
+                    </ul>
                 </div>
-                <div class="md:col-span-3 text-[10px] font-tech space-y-6">
-                    <h4 class="text-elite-gold tracking-widest uppercase opacity-40">Client Care</h4>
-                    <a href="#" class="block text-gray-500 hover:text-white transition-all uppercase tracking-widest">Shipping Policy</a>
-                    <a href="#" class="block text-gray-500 hover:text-white transition-all uppercase tracking-widest">Terms of Service</a>
-                    <a href="#" class="block text-gray-500 hover:text-white transition-all uppercase tracking-widest">Instagram</a>
-                </div>
-            </div>
-            
-            <div class="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-white/10 gap-6">
-                <p class="text-[8px] text-gray-600 tracking-[0.5em] uppercase">© 2026 RAIYAN CLOTHING ÉLITE. ALL RIGHTS RESERVED.</p>
-                <div class="flex gap-4">
-                    <div class="h-8 w-px bg-white/10"></div>
-                    <p class="text-[8px] text-gray-600 tracking-[0.5em] uppercase self-center">Privacy Over Ownership</p>
+                <div class="md:text-right">
+                    <h4 class="font-tech text-[11px] text-white tracking-[0.2em] uppercase mb-4">Social Media</h4>
+                    <ul class="space-y-3 font-tech text-[10px] text-gray-500 tracking-widest uppercase">
+                        <li><a href="#" target="_blank" class="hover:text-elite-gold transition-colors">Instagram</a></li>
+                        <li><a href="#" target="_blank" class="hover:text-elite-gold transition-colors">Facebook</a></li>
+                    </ul>
+                    <div class="mt-8 font-tech text-[9px] text-elite-gold tracking-widest border border-elite-gold/20 inline-block px-4 py-2 bg-black/50">DHAKA TIME: <span id="live-clock">00:00:00</span></div>
                 </div>
             </div>
+            <div class="text-center border-t border-white/5 pt-8"><p class="text-[8px] font-tech text-gray-600 tracking-[0.3em] uppercase">© 2026 RAIYAN CLOTHING. ALL RIGHTS RESERVED.</p></div>
         </footer>
     </div>
 
-    <div id="quick-view" class="fixed inset-0 z-[200] flex items-center justify-center p-6 opacity-0 pointer-events-none transition-all duration-500">
-        <div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="closeQuickView()"></div>
-        <div class="relative w-full max-w-4xl bg-[#0a0a0a] border border-white/10 flex flex-col md:flex-row overflow-hidden max-h-[90vh]">
-            <button onclick="closeQuickView()" class="absolute top-4 right-4 z-10 text-white font-tech text-xl">&times;</button>
-            <div class="w-full md:w-1/2 aspect-[3/4] overflow-hidden">
-                <img id="qv-image" src="" class="w-full h-full object-cover">
-            </div>
-            <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-                <span id="qv-category" class="font-tech text-[9px] text-elite-gold tracking-[0.5em] uppercase mb-4">Category</span>
-                <h3 id="qv-name" class="font-luxury text-2xl md:text-3xl text-white tracking-widest uppercase mb-6">Product Name</h3>
-                <p id="qv-desc" class="font-tech text-[11px] text-gray-400 leading-relaxed uppercase tracking-widest mb-10">Description goes here.</p>
-                <div class="flex justify-between items-center mb-10">
-                    <span id="qv-price" class="font-tech text-xl text-white">0 BDT</span>
-                    <span id="qv-stock" class="font-tech text-[9px] text-elite-gold tracking-widest uppercase">In Stock</span>
+    <div id="product-page" class="fullscreen-overlay factory-bg flex flex-col md:flex-row">
+        <button onclick="closeProductPage()" class="fixed top-6 right-6 z-50 text-white font-tech text-[10px] tracking-widest hover:text-elite-gold transition-colors bg-black/50 px-4 py-2 border border-white/10 backdrop-blur-md rounded magnetic-btn">[ CLOSE X ]</button>
+        <div class="w-full md:w-1/2 min-h-[50vh] md:min-h-screen relative border-r border-factory-border p-0 md:p-16 flex items-center justify-center bg-[#030303] img-zoom-container">
+            <button onclick="prevImage()" class="absolute left-4 z-10 bg-black/50 text-white border border-white/20 w-10 h-10 rounded-full hover:bg-elite-gold hover:text-black transition" id="btn-prev-img">&#10094;</button>
+            <div class="w-full h-full max-h-[70vh] relative overflow-hidden flex items-center justify-center p-4"><img id="pd-image" src="" class="max-w-full max-h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]"></div>
+            <button onclick="nextImage()" class="absolute right-4 z-10 bg-black/50 text-white border border-white/20 w-10 h-10 rounded-full hover:bg-elite-gold hover:text-black transition" id="btn-next-img">&#10095;</button>
+            <div class="absolute bottom-6 right-6 font-tech text-[10px] text-elite-gold tracking-[0.3em] bg-black/80 px-3 py-1 rounded" id="img-counter">1/1</div>
+        </div>
+        <div class="w-full md:w-1/2 min-h-[50vh] p-6 md:p-16 flex flex-col justify-center relative bg-gradient-to-b from-[#050505] to-[#0a0a0a]">
+            <div id="stock-warning" class="font-tech text-[9px] text-red-500 tracking-widest uppercase mb-4 animate-pulse hidden">Limited Stock! Only <span id="stock-count"></span> remaining.</div>
+            <h2 id="pd-name" class="font-luxury text-2xl md:text-4xl text-white tracking-widest uppercase mb-2 leading-tight">Product Name</h2>
+            <div class="font-tech text-xl text-elite-gold mb-6"><span id="pd-price">0</span> BDT</div>
+            <div class="border-t border-b border-white/5 py-4 mb-6"><p id="pd-desc" class="font-sans text-[12px] text-gray-400 leading-relaxed tracking-wide">Premium quality details.</p></div>
+            <div class="mb-8">
+                <div class="flex justify-between items-end mb-3"><span class="font-tech text-[9px] text-white tracking-widest uppercase">SELECT SIZE</span><span onclick="openSizeGuide()" class="font-tech text-[9px] text-gray-500 tracking-widest cursor-pointer hover:text-elite-gold underline">SIZE GUIDE</span></div>
+                <div class="grid grid-cols-4 gap-2" id="size-selector">
+                    <div class="size-btn active" onclick="selectSize(this, 'S')">S</div>
+                    <div class="size-btn" onclick="selectSize(this, 'M')">M</div>
+                    <div class="size-btn" onclick="selectSize(this, 'L')">L</div>
+                    <div class="size-btn" onclick="selectSize(this, 'XL')">XL</div>
                 </div>
-                <button class="btn-elite w-full">INITIATE PURCHASE</button>
+            </div>
+            <button id="btn-open-checkout" class="btn-elite w-full bg-elite-gold text-black hover:bg-white magnetic-btn" onclick="openCheckout()">ORDER NOW</button>
+        </div>
+    </div>
+
+    <div id="size-guide-modal" class="blur-modal">
+        <div class="modal-box relative">
+            <button onclick="closeSizeGuide()" class="absolute top-4 right-4 text-gray-500 hover:text-white font-tech text-sm">[X]</button>
+            <h3 class="font-luxury text-xl text-elite-gold tracking-widest mb-6 uppercase">Size Guide</h3>
+            <table class="w-full font-tech text-[10px] text-left text-gray-300 border-collapse">
+                <tr class="border-b border-[#333]"><th class="py-2 text-white">SIZE</th><th class="py-2 text-white">CHEST (in)</th><th class="py-2 text-white">LENGTH (in)</th></tr>
+                <tr class="border-b border-[#222]"><td class="py-2">S</td><td class="py-2">38 - 40</td><td class="py-2">27</td></tr>
+                <tr class="border-b border-[#222]"><td class="py-2">M</td><td class="py-2">40 - 42</td><td class="py-2">28</td></tr>
+                <tr class="border-b border-[#222]"><td class="py-2">L</td><td class="py-2">42 - 44</td><td class="py-2">29</td></tr>
+                <tr><td class="py-2">XL</td><td class="py-2">44 - 46</td><td class="py-2">30</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="track-order-modal" class="blur-modal" style="background: rgba(1, 22, 9, 0.85); backdrop-filter: blur(20px);">
+        <div class="modal-box bg-transparent border-elite-gold">
+            <button onclick="closeTrackModal()" class="absolute top-4 right-4 text-elite-gold hover:text-white font-tech text-sm">[X]</button>
+            <h3 class="font-luxury text-2xl text-white tracking-widest mb-2 uppercase">Track Order</h3>
+            <div class="input-group mt-6"><input type="text" id="track-id-input" class="input-elite text-center" placeholder="RYN-XXXXXX" oninput="this.value = this.value.toUpperCase()"></div>
+            <button onclick="checkOrderStatus()" id="btn-track" class="btn-elite w-full border-elite-gold text-elite-gold hover:bg-elite-gold hover:text-black mb-6">CHECK STATUS</button>
+            <div id="track-result" class="hidden text-left bg-black/50 p-4 border border-white/10 rounded">
+                <div class="font-tech text-[10px] text-gray-400 mb-1">STATUS:</div>
+                <div id="track-status" class="font-luxury text-lg text-elite-gold tracking-widest mb-4">PENDING</div>
+                <div id="track-note" class="font-sans text-[12px] text-white">Order received.</div>
             </div>
         </div>
+    </div>
+
+    <div id="checkout-panel" class="checkout-panel flex-col md:max-w-md w-full shadow-[-20px_0_50px_rgba(0,0,0,0.8)]">
+        <div class="p-6 border-b border-[#222] flex justify-between items-center bg-black sticky top-0 z-10 bg-black/90"><span class="font-tech text-xs text-white uppercase">Checkout</span><button onclick="closeCheckout()" class="text-gray-400 font-tech hover:text-red-500">[ CANCEL ]</button></div>
+        <div class="p-6 flex-1">
+            <div class="mb-8 bg-[#0a0a0a] p-4 border border-[#222] rounded flex justify-between items-center">
+                <div><h4 class="font-luxury text-sm text-white mb-1" id="chk-item-name">Item Name</h4><span class="font-tech text-[10px] text-gray-400 uppercase">SIZE: <span id="chk-size" class="text-white">S</span></span></div>
+                <div class="text-right"><span class="font-tech text-sm text-elite-gold tracking-widest" id="chk-item-price">0 BDT</span></div>
+            </div>
+            <form id="order-form">
+                <div class="input-group"><input type="text" id="cust-name" class="input-elite" placeholder=" " required><label class="input-label">Full Name *</label></div>
+                <div class="input-group"><input type="tel" id="cust-phone" class="input-elite" placeholder=" " required><label class="input-label">Phone Number *</label></div>
+                <div class="input-group"><textarea id="cust-address" class="input-elite h-20 resize-none pt-4" placeholder=" " required></textarea><label class="input-label">Full Address *</label></div>
+                <div class="border border-[#222] rounded p-4 mb-6 bg-black"><label class="font-tech text-[10px] text-white uppercase mb-3 block">Delivery Area *</label>
+                    <div class="space-y-3">
+                        <label class="flex items-center gap-3 cursor-pointer"><input type="radio" name="shipping" value="70" checked class="accent-elite-gold w-4 h-4" onchange="calculateTotal()"><span class="font-tech text-[11px] text-gray-300">Inside Dhaka (+70 BDT)</span></label>
+                        <label class="flex items-center gap-3 cursor-pointer"><input type="radio" name="shipping" value="110" class="accent-elite-gold w-4 h-4" onchange="calculateTotal()"><span class="font-tech text-[11px] text-gray-300">Outside Dhaka (+110 BDT)</span></label>
+                    </div>
+                </div>
+                <div class="mb-8 font-tech text-[11px] tracking-widest border-t border-[#222] pt-4">
+                    <div class="flex justify-between text-gray-500 mb-2"><span>Product Price</span><span id="calc-subtotal">0 BDT</span></div>
+                    <div class="flex justify-between text-gray-500 mb-4"><span>Delivery Charge</span><span id="calc-shipping">70 BDT</span></div>
+                    <div class="flex justify-between text-elite-gold text-[14px] font-bold border-b border-elite-gold/30 pb-2"><span>TOTAL</span><span id="calc-total">0 BDT</span></div>
+                </div>
+                <button type="submit" id="btn-submit-order" class="btn-elite w-full bg-elite-gold text-black font-bold magnetic-btn">CONFIRM ORDER</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="success-screen" class="fixed inset-0 z-[400] bg-black flex flex-col items-center justify-center hidden">
+        <div class="w-16 h-16 border-2 border-elite-gold rounded-full flex items-center justify-center mb-6 bg-elite-gold/10"><svg class="w-8 h-8 text-elite-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+        <h2 class="font-luxury text-3xl md:text-5xl text-gold-gradient tracking-[0.3em] mb-4">ORDER SUCCESSFUL</h2>
+        <div class="bg-[#0a0a0a] border border-elite-gold p-6 rounded mb-8 text-center max-w-sm w-full mx-4">
+            <p class="font-tech text-[10px] text-gray-400 uppercase mb-2">Your Tracking ID</p>
+            <div class="font-tech text-2xl text-white tracking-[0.2em] mb-2 cursor-pointer hover:text-elite-gold transition" onclick="copyTrackingId()" id="generated-track-id">RYN-XXXXXX</div>
+        </div>
+        <button onclick="location.reload()" class="btn-elite border-white/20 text-white hover:bg-elite-gold hover:text-black">GO BACK TO STORE</button>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, collection, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getFirestore, collection, query, orderBy, getDocs, where, onSnapshot, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDAFP0n9HJt3100zXR9TLR9mE9216kZR7M",
@@ -156,104 +263,222 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        
+        let currentProduct = null, selectedSize = 'S', productImages = [], currentImageIndex = 0, carouselInterval = null;
 
-        // 1. MAINTENANCE SWITCH
-        onSnapshot(doc(db, "settings", "siteStatus"), (snapshot) => {
-            const data = snapshot.data();
-            if (data?.maintenance) {
-                document.body.innerHTML = `<div class="maint-screen">
-                    <h1 class="font-luxury text-gold-gradient text-xl tracking-[1em] mb-8">MAINTENANCE ACTIVE</h1>
-                    <p class="font-tech text-[10px] text-gray-500 tracking-[0.5em] uppercase">Recalibrating the Archive.</p>
-                </div>`;
-            }
-        });
+        const triggerHaptic = () => { if(navigator.vibrate) navigator.vibrate(50); };
 
-        // 2. LIVE PRODUCTS LOAD WITH ANIMATION
+        window.showToast = (msg, isError = false) => {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${isError ? 'border-red-500 text-red-500' : ''}`;
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3000);
+        };
+
+        window.handleProductClick = (element, item) => {
+            triggerHaptic();
+            gsap.to(element, { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1, onComplete: () => openProductPage(item) });
+        };
+
         const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
         onSnapshot(q, (snapshot) => {
+            document.getElementById('loading-state').style.display = 'none';
             const grid = document.getElementById('product-grid');
             grid.innerHTML = '';
             
             snapshot.forEach((doc) => {
-                const item = doc.data();
+                const item = { id: doc.id, ...doc.data() };
                 const isOut = item.stock <= 0;
-                const isHidden = item.isVisible === false;
+                const mainImage = item.images?.[0] || item.imageUrl;
+                const secondaryImage = item.images?.[1] || mainImage;
                 
-                if(!isHidden) {
+                if(item.isVisible !== false) {
                     const card = document.createElement('div');
-                    card.className = "product-card opacity-0 translate-y-10 group cursor-pointer";
-                    card.onclick = () => openQuickView(item);
+                    card.className = "product-card opacity-0 translate-y-8 flex flex-col h-full rounded";
+                    
+                    // Securely escape double quotes for the attribute
+                    const itemDataStr = JSON.stringify(item).replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+
                     card.innerHTML = `
-                        <div class="image-container">
-                            <img src="${item.imageUrl}" class="w-full h-full object-cover transition-all duration-[1.5s] ${isOut ? 'grayscale contrast-125' : 'group-hover:scale-110'}">
-                            ${isOut ? `<div class="absolute inset-0 flex items-center justify-center bg-black/60"><span class="font-luxury text-[10px] tracking-[0.5em] border border-white/20 px-6 py-2">ARCHIVED</span></div>` : ''}
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                                <span class="font-tech text-[9px] tracking-widest text-white uppercase">Quick View +</span>
+                        <a href="?item=${item.id}" onclick="event.preventDefault(); handleProductClick(this.closest('.product-card'), ${itemDataStr})" class="block h-full group">
+                            <div class="image-container relative rounded">
+                                <img src="${mainImage}" class="w-full h-full object-cover transition-all duration-700 ${isOut ? 'grayscale contrast-125' : 'group-hover:opacity-0 absolute inset-0'}">
+                                ${!isOut ? `<img src="${secondaryImage}" class="w-full h-full object-cover transition-all duration-700 opacity-0 group-hover:opacity-100 group-hover:scale-110">` : ''}
+                                ${isOut ? `<div class="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-10"><span class="font-tech text-[10px] tracking-widest border border-red-900 text-red-500 px-4 py-2 bg-black uppercase">Sold Out</span></div>` : ''}
                             </div>
-                        </div>
-                        <div class="mt-8">
-                            <div class="flex justify-between items-start">
-                                <h4 class="font-luxury text-sm tracking-[0.2em] uppercase">${item.name}</h4>
-                                <p class="font-tech text-[10px] text-elite-gold">${item.price} BDT</p>
+                            <div class="mt-4 flex flex-col items-start text-left flex-grow justify-between">
+                                <div class="mb-4 w-full">
+                                    <h4 class="font-luxury text-sm tracking-wider uppercase text-white mb-1 truncate">${item.name}</h4>
+                                    <p class="font-tech text-[12px] text-elite-gold tracking-widest">${item.price} BDT</p>
+                                </div>
+                                <div class="w-full text-center border border-white/10 py-3 font-tech text-[10px] tracking-widest uppercase text-gray-300 transition-all duration-300 group-hover:bg-white group-hover:text-black group-hover:border-white rounded ${isOut ? 'opacity-50' : ''}">
+                                    ${isOut ? 'SOLD OUT' : 'ORDER NOW'}
+                                </div>
                             </div>
-                            <p class="font-tech text-[8px] text-gray-600 tracking-[0.4em] mt-3 uppercase">${item.category || 'Collection Item'}</p>
-                        </div>
+                        </a>
                     `;
                     grid.appendChild(card);
                 }
             });
-
-            // Trigger GSAP Reveal for cards
-            gsap.to(".product-card", {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                stagger: 0.2,
-                ease: "power4.out"
-            });
+            gsap.to(".product-card", { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: "power4.out", overwrite: true });
         });
 
-        // Quick View Function
-        window.openQuickView = (item) => {
-            document.getElementById('qv-image').src = item.imageUrl;
-            document.getElementById('qv-name').innerText = item.name;
-            document.getElementById('qv-price').innerText = `${item.price} BDT`;
-            document.getElementById('qv-desc').innerText = item.description || "No description provided for this archive piece.";
-            document.getElementById('qv-category').innerText = item.category || "Collection Item";
-            document.getElementById('qv-stock').innerText = item.stock > 0 ? "In Stock" : "Sold Out";
-            
-            const qv = document.getElementById('quick-view');
-            qv.classList.remove('pointer-events-none');
-            gsap.to(qv, { opacity: 1, duration: 0.5 });
+        window.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const itemId = urlParams.get('item');
+            if (itemId) {
+                const docRef = doc(db, "products", itemId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) openProductPage({ id: docSnap.id, ...docSnap.data() });
+            }
+        });
+
+        window.openProductPage = (item) => {
+            currentProduct = item;
+            selectedSize = 'S';
+            productImages = item.images?.length > 0 ? item.images : [item.imageUrl];
+            currentImageIndex = 0;
+            updateImageDisplay();
+            startCarousel();
+            document.getElementById('pd-name').innerText = item.name;
+            document.getElementById('pd-price').innerText = item.price;
+            document.getElementById('pd-desc').innerText = item.description || "Premium streetwear Élite collection.";
+            const stockWarn = document.getElementById('stock-warning');
+            if(item.stock > 0 && item.stock <= 5) { stockWarn.classList.remove('hidden'); document.getElementById('stock-count').innerText = item.stock; }
+            else { stockWarn.classList.add('hidden'); }
+            const btn = document.getElementById('btn-open-checkout');
+            btn.disabled = item.stock <= 0;
+            btn.innerText = item.stock <= 0 ? "SOLD OUT" : "ORDER NOW";
+            window.history.pushState({page: 'product'}, item.name, `?item=${item.id}`);
+            const page = document.getElementById('product-page');
+            page.style.display = 'flex';
+            gsap.fromTo(page, { y: '100%' }, { y: '0%', duration: 0.6, ease: "power3.out" });
         };
 
-        window.closeQuickView = () => {
-            const qv = document.getElementById('quick-view');
-            qv.classList.add('pointer-events-none');
-            gsap.to(qv, { opacity: 0, duration: 0.3 });
+        const startCarousel = () => { clearInterval(carouselInterval); if(productImages.length > 1) carouselInterval = setInterval(nextImage, 4000); };
+        window.updateImageDisplay = () => {
+            const imgEl = document.getElementById('pd-image');
+            imgEl.style.opacity = 0;
+            setTimeout(() => {
+                imgEl.src = productImages[currentImageIndex];
+                imgEl.style.opacity = 1;
+                document.getElementById('img-counter').innerText = `${currentImageIndex + 1}/${productImages.length}`;
+            }, 200);
+        };
+
+        window.nextImage = () => { currentImageIndex = (currentImageIndex + 1) % productImages.length; updateImageDisplay(); startCarousel(); };
+        window.prevImage = () => { currentImageIndex = (currentImageIndex - 1 + productImages.length) % productImages.length; updateImageDisplay(); startCarousel(); };
+        window.closeProductPage = () => { clearInterval(carouselInterval); window.history.pushState({page: 'home'}, 'Home', window.location.pathname); gsap.to('#product-page', { y: '100%', duration: 0.4, ease: "power2.in", onComplete: () => { document.getElementById('product-page').style.display = 'none'; }}); };
+        window.selectSize = (el, s) => { triggerHaptic(); document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); selectedSize = s; };
+        
+        window.openCheckout = () => {
+            document.getElementById('chk-item-name').innerText = currentProduct.name;
+            document.getElementById('chk-size').innerText = selectedSize;
+            document.getElementById('chk-item-price').innerText = `${currentProduct.price} BDT`;
+            calculateTotal();
+            const panel = document.getElementById('checkout-panel');
+            panel.style.display = 'flex';
+            gsap.fromTo(panel, { x: '100%' }, { x: '0%', duration: 0.5, ease: "power3.out" });
+        };
+
+        window.closeCheckout = () => { gsap.to('#checkout-panel', { x: '100%', duration: 0.4, ease: "power2.in", onComplete: () => { document.getElementById('checkout-panel').style.display = 'none'; }}); };
+        window.calculateTotal = () => {
+            if(!currentProduct) return;
+            const price = parseFloat(currentProduct.price.toString().replace(/,/g, ''));
+            const shipping = parseFloat(document.querySelector('input[name="shipping"]:checked').value);
+            document.getElementById('calc-subtotal').innerText = `${price} BDT`;
+            document.getElementById('calc-shipping').innerText = `${shipping} BDT`;
+            document.getElementById('calc-total').innerText = `${price + shipping} BDT`;
+        };
+
+        document.getElementById('order-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-order');
+            btn.innerText = "PLEASE WAIT..."; btn.disabled = true;
+            const trackingId = 'RYN-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+            try {
+                await addDoc(collection(db, "orders"), {
+                    trackingId, productId: currentProduct.id, productName: currentProduct.name, size: selectedSize,
+                    customer: { name: document.getElementById('cust-name').value, phone: document.getElementById('cust-phone').value, address: document.getElementById('cust-address').value },
+                    pricing: { total: document.getElementById('calc-total').innerText }, status: 'PENDING', createdAt: serverTimestamp()
+                });
+                document.getElementById('generated-track-id').innerText = trackingId;
+                document.getElementById('success-screen').classList.remove('hidden');
+            } catch (error) { showToast("Connection Error.", true); btn.innerText = "CONFIRM ORDER"; btn.disabled = false; }
+        });
+
+        setInterval(() => {
+            const options = { timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', second:'2-digit', hour12: true };
+            document.getElementById('live-clock').innerText = new Date().toLocaleTimeString('en-US', options);
+        }, 1000);
+
+        // Global functions for modals
+        window.openTrackModal = () => { document.getElementById('track-order-modal').classList.add('active'); };
+        window.closeTrackModal = () => { document.getElementById('track-order-modal').classList.remove('active'); };
+        window.openSizeGuide = () => { document.getElementById('size-guide-modal').classList.add('active'); };
+        window.closeSizeGuide = () => { document.getElementById('size-guide-modal').classList.remove('active'); };
+        window.copyTrackingId = () => { navigator.clipboard.writeText(document.getElementById('generated-track-id').innerText); showToast("Copied!"); };
+
+        window.checkOrderStatus = async () => {
+            const id = document.getElementById('track-id-input').value.trim();
+            if(!id) return;
+            const qO = query(collection(db, "orders"), where("trackingId", "==", id));
+            const snap = await getDocs(qO);
+            const res = document.getElementById('track-result');
+            if(snap.empty) { showToast("Not found.", true); res.classList.add('hidden'); }
+            else {
+                snap.forEach(d => {
+                    document.getElementById('track-status').innerText = d.data().status;
+                    document.getElementById('track-note').innerText = d.data().adminNote || "Processing...";
+                    res.classList.remove('hidden');
+                });
+            }
         };
     </script>
 
     <script>
-        // LUXURY ENTRANCE ANIMATIONS
         document.addEventListener('DOMContentLoaded', () => {
-            const tl = gsap.timeline();
-            
-            tl.to("#hero-title", { opacity: 1, duration: 2, y: -20, ease: "power3.out" })
-              .to("#scroll-indicator", { opacity: 1, duration: 1 }, "-=1");
+            setTimeout(() => {
+                const loader = document.getElementById('preloader');
+                loader.style.opacity = 0;
+                setTimeout(() => loader.remove(), 1000);
+                gsap.to("#hero-title", { opacity: 1, duration: 2, y: -20, ease: "power3.out" });
+                gsap.to("#scroll-indicator", { opacity: 1, duration: 1, delay: 0.5 });
+            }, 1500);
 
-            // Hero Parallax on Scroll
-            gsap.to("#hero-wrap", {
-                scrollTrigger: {
-                    trigger: "body",
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: true
-                },
-                y: -200,
-                opacity: 0
+            gsap.to("#hero-wrap", { scrollTrigger: { trigger: "body", start: "top top", end: "bottom top", scrub: true }, y: -100, opacity: 0 });
+
+            window.addEventListener('scroll', () => {
+                const nav = document.getElementById('main-nav'), progress = document.getElementById('scroll-progress'), btn = document.getElementById('btn-back-to-top');
+                if (window.scrollY > 50) nav.classList.add('bg-black/80', 'backdrop-blur-md', 'border-b', 'border-white/10');
+                else nav.classList.remove('bg-black/80', 'backdrop-blur-md', 'border-b', 'border-white/10');
+                const winScroll = document.documentElement.scrollTop, height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                progress.style.width = (winScroll / height) * 100 + "%";
+                btn.classList.toggle('visible', winScroll > 500);
             });
+
+            if(window.innerWidth > 768) {
+                const dot = document.getElementById("cursor-dot"), outline = document.getElementById("cursor-outline");
+                window.addEventListener("mousemove", (e) => {
+                    dot.style.left = `${e.clientX}px`; dot.style.top = `${e.clientY}px`;
+                    outline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 100, fill: "forwards" });
+                });
+                document.querySelectorAll('a, button, .cursor-pointer').forEach(el => {
+                    el.addEventListener('mouseenter', () => { outline.style.width = '50px'; outline.style.height = '50px'; outline.style.background = 'rgba(212, 175, 55, 0.1)'; });
+                    el.addEventListener('mouseleave', () => { outline.style.width = '30px'; outline.style.height = '30px'; outline.style.background = 'transparent'; });
+                });
+                document.querySelectorAll('.magnetic-btn').forEach(btn => {
+                    btn.addEventListener('mousemove', (e) => {
+                        const rect = btn.getBoundingClientRect();
+                        gsap.to(btn, { x: (e.clientX - rect.left - rect.width/2) * 0.2, y: (e.clientY - rect.top - rect.height/2) * 0.2, duration: 0.3 });
+                    });
+                    btn.addEventListener('mouseleave', () => gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }));
+                });
+            }
         });
     </script>
 </body>
-</html>
+                                                                                                                        </html>
